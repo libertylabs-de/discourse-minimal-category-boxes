@@ -10,8 +10,10 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   <template>
-    <CategoriesBoxesWithTopics
-      @categories={{this.categories}}
-    />
+    <div class="custom-category-boxes-container">
+      <CategoriesBoxesWithTopics
+        @categories={{this.categories}}
+      />
+    </div>
   </template>
 }
