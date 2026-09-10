@@ -176,7 +176,7 @@
     border-left-width: 0;
     border-radius: 12px;
     margin: 0 0;
-    max-height: 140px;
+    max-height: 144px;
     overflow: hidden;
     transition: all ease-out 0.2s;
     width: initial;
@@ -210,8 +210,8 @@
       .category-logo {
         align-self: center;
         display: inline-block;
-        width: 100px;
-        height: 100px;
+        width: 72px;
+        height: 72px;
         margin: 0;
         background: rgba(var(--tertiary-rgb), 0.1) !important;
 
@@ -273,7 +273,8 @@
   }
 
   .category-box-heading {
-    margin-bottom: 8px;
+    margin-bottom: 0px;
+    font-size: 1.65em;
   }
 
   .description {
@@ -325,8 +326,8 @@
       column-gap: 24px;
 
       .category-logo {
-        height: 80px;
-        width: 80px;
+        height: 72px;
+        width: 72px;
         background-color: rgba(var(--tertiary-rgb), 0.1) !important;
       }
     }
