@@ -1,8 +1,8 @@
 import { apiInitializer } from "discourse/lib/api";
-import CustomCategoryBoxes from "../components/custom-category-boxes";
+import ModernCategoryBoxes from "../components/category-boxes";
 
 export default apiInitializer((api) => {
   // Render the same component used by Modern Category + Group Boxes
   // into an outlet outside #main-outlet.
-  api.renderInOutlet("above-main-container", CustomCategoryBoxes);
+  api.renderInOutlet("above-main-container", ModernCategoryBoxes);
 });
