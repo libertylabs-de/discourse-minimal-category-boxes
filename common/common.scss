@@ -384,3 +384,10 @@
   padding: 1rem;
   text-align: center;
 }
+
+.below-site-header-outlet .category-boxes-outlet-test {
+  width: 100%;
+  max-width: var(--d-max-width);
+  margin-inline: auto;
+  box-sizing: border-box;
+}
