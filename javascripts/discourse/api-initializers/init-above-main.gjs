@@ -1,9 +1,9 @@
 import { apiInitializer } from "discourse/lib/api";
-import LibertyCategoriesDisplay from "../components/liberty-categories-display";
+import LibertyCategoryBoxes from "../components/liberty-category-boxes";
 
 export default apiInitializer((api) => {
   api.renderInOutlet(
     "below-site-header",
-    LibertyCategoriesDisplay
+    LibertyCategoryBoxes
   );
 });
