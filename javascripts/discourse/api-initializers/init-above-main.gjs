@@ -1,10 +1,10 @@
 import { apiInitializer } from "discourse/lib/api";
-import LibertyCategoryBoxes from "../components/liberty-category-boxes";
-
+//import LibertyCategoryBoxes from "../components/liberty-category-boxes";
+import LibertyCategoryLinux      from "../components/liberty-category-linux";
 export default apiInitializer((api) => {
 
   // ── 1. Inject category boxes above main content ──────────────────────────
-  api.renderInOutlet("below-site-header", LibertyCategoryBoxes);
+  api.renderInOutlet("below-site-header", LibertyCategoryLinux);
 
   // ── 2. Mirror #main-outlet-wrapper's live width onto --main-outer-width ──
   if (typeof ResizeObserver === "undefined") return;
@@ -23,9 +23,8 @@ export default apiInitializer((api) => {
 
   const attachObserver = () => {
     if (attached) return;
-    const mainOutlet = document.getElementById("main-outlet-wrapper"); // ← corrected
+    const mainOutlet = document.getElementById("main-outlet-wrapper");
     if (!mainOutlet) return;
-
     observer = new ResizeObserver(applyWidth);
     observer.observe(mainOutlet);
     attached = true;
