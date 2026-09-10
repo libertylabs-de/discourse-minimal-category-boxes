@@ -1,19 +1,16 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
+import CustomCategoryBoxes from "./custom-category-boxes";
 
 export default class LibertyCategoryBoxes extends Component {
   @service site;
 
-  get categories() {
-    return this.site.categories;
+  get outletArgs() {
+    // Mimic the outletArgs shape that the discovery outlet normally provides
+    return { categories: this.site.categories };
   }
 
   <template>
-    <div class="custom-category-boxes-container">
-      <CategoriesBoxesWithTopics
-        @categories={{this.categories}}
-      />
-    </div>
+    <CustomCategoryBoxes @outletArgs={{this.outletArgs}} />
   </template>
 }
