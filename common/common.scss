@@ -277,6 +277,7 @@
   }
 
   .description {
+    display: none;
     color: var(--primary-high);
     font-size: 1em;
     font-weight: 400;
@@ -352,7 +353,7 @@
   body.category,
   #header-list-area {
     .custom-category-boxes {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
     }
   }
 }
