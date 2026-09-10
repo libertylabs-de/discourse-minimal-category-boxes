@@ -9,50 +9,45 @@ export default class extends Component {
 
   get classNames() {
     const classNames = ["custom-category-boxes-container"];
-
     if (this.noneSelected) {
       classNames.push("none-selected");
     }
-
     return classNames.join(" ");
   }
 
   #allowedCategories(selectedCategories) {
-    // filters categories to only include selected categories for each section
-    let availableCategories = this.site.categories.filter((category) => {
-      if (selectedCategories.indexOf(category.id) !== -1) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
-    return availableCategories;
+    return this.site.categories.filter(
+      (category) => selectedCategories.indexOf(category.id) !== -1
+    );
   }
 
-  get shouldRenderHeadings() {
-    let isCategoryPage = this.router.currentRoute.name.includes("category");
-    let hasCategoriesSet = false;
+  get isOnCategoryPage() {
+    return this.router.currentRoute?.name?.includes("category");
+  }
 
-    if (
+  get hasAnySectionConfigured() {
+    return (
       settings.first_categories ||
       settings.second_categories ||
       settings.third_categories ||
       settings.fourth_categories ||
       settings.fifth_categories
-    ) {
-      hasCategoriesSet = true;
-    }
+    );
+  }
 
-    if (!isCategoryPage && hasCategoriesSet) {
-      return true;
-    } else {
-      return false;
-    }
+  // ✅ Render headings when sections are configured, regardless of route
+  // (we're injecting above main, not relying on outlet route detection)
+  get shouldRenderHeadings() {
+    return !!this.hasAnySectionConfigured && !this.isOnCategoryPage;
+  }
+
+  // ✅ Fallback categories: use outletArgs if provided, else all site categories
+  get fallbackCategories() {
+    return this.args.outletArgs?.categories ?? this.site.categories;
   }
 
   get noneSelected() {
-    return this.router.currentRoute.name.includes("None");
+    return this.router.currentRoute?.name?.includes("None");
   }
 
   get firstCategories() {
@@ -88,32 +83,35 @@ export default class extends Component {
   <template>
     <div class={{this.classNames}}>
       {{#if this.shouldRenderHeadings}}
-        {{#if this.firstCategories}}
+
+        {{#if this.firstCategories.length}}
           <CategoryHeader @header={{settings.first_categories_header}} />
           <CategoryBoxes @categories={{this.firstCategories}} />
         {{/if}}
 
-        {{#if this.secondCategories}}
+        {{#if this.secondCategories.length}}
           <CategoryHeader @header={{settings.second_categories_header}} />
           <CategoryBoxes @categories={{this.secondCategories}} />
         {{/if}}
 
-        {{#if this.thirdCategories}}
+        {{#if this.thirdCategories.length}}
           <CategoryHeader @header={{settings.third_categories_header}} />
           <CategoryBoxes @categories={{this.thirdCategories}} />
         {{/if}}
 
-        {{#if this.fourthCategories}}
+        {{#if this.fourthCategories.length}}
           <CategoryHeader @header={{settings.fourth_categories_header}} />
           <CategoryBoxes @categories={{this.fourthCategories}} />
         {{/if}}
 
-        {{#if this.fifthCategories}}
+        {{#if this.fifthCategories.length}}
           <CategoryHeader @header={{settings.fifth_categories_header}} />
           <CategoryBoxes @categories={{this.fifthCategories}} />
         {{/if}}
+
       {{else}}
-        <CategoryBoxes @categories={{@outletArgs.categories}} />
+        {{! Fallback: render all categories without section headings }}
+        <CategoryBoxes @categories={{this.fallbackCategories}} />
       {{/if}}
     </div>
   </template>
