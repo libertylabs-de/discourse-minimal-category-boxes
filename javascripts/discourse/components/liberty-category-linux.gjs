@@ -10,10 +10,11 @@ export default class LibertyCategoryLinux extends Component {
   // Add every slug that should trigger display: the parent + all subcategories
   get allowedSlugs() {
     return [
-      "rund-um-linux",                    // ← replace with your actual slug
-      "rund-um-linux/hardware",           // ← replace with your actual slug
-      "rund-um-linux/software",           // ← replace with your actual slug
-      "rund-um-linux/libertyos",          // ← replace with your actual slug
+      "rund-um-linux",      // ← replace with your actual slug
+      "pc-hardware",       
+      "linux-software",     
+      "libertyos-ubuntu",          
+      "andere-distros",
     ];
   }
 
