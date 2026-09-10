@@ -1,6 +1,7 @@
 @use "lib/viewport";
 
 .custom-category-header {
+  max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
   margin: 1em auto;
   display: inline-block;
   font-size: 3em;
