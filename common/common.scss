@@ -199,6 +199,9 @@
     .category-box-inner {
       border: 0;
       display: grid;
+      display: flex;
+      justify-content: center; /* Centers horizontally */
+      align-items: center;     /* Centers vertically */
       grid-auto-flow: column;
       grid-template-columns: 0fr 1fr 0fr;
       column-gap: 48px;
@@ -210,11 +213,15 @@
         width: 100px;
         height: 100px;
         margin: 0;
-        background: rgba(var(--tertiary-rgb), 0.2) !important;
+        background: rgba(var(--tertiary-rgb), 0.1) !important;
 
         img {
           height: 80%;
           width: 80%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
         }
 
         .category-abbreviation {
