@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import LibertyCategoryAndroid from "./liberty-category-android";
 
-export default class LibertyCategoryLinux extends Component {
+export default class LibertyCategoryAndroid extends Component {
   @service site;
   @service router;
 
@@ -16,23 +16,30 @@ export default class LibertyCategoryLinux extends Component {
     ];
   }
 
-  get currentSlug() {
-    const route = this.router.currentRoute;
-    // Walk up the route tree to find a slug param
-    let r = route;
+  // Option A: match against full path (no id)
+  get currentSlugPath() {
+    let r = this.router.currentRoute;
     while (r) {
-      if (r.params?.slug) return r.params.slug;
       if (r.params?.category_slug_path_with_id) {
-        // Discourse sometimes uses this format: "slug/id"
-        return r.params.category_slug_path_with_id.split("/")[0];
+        const parts = r.params.category_slug_path_with_id.split("/");
+        // Remove trailing numeric id
+        return parts.filter((p) => isNaN(p)).join("/");
       }
       r = r.parent;
     }
     return null;
   }
 
+  get allowedSlugs() {
+    return [
+      "android",
+      "android/libertyphone-grapheneos",
+      "android/tipps-und-tricks",
+    ];
+  }
+  
   get shouldDisplay() {
-    return this.allowedSlugs.includes(this.currentSlug);
+    return this.allowedSlugs.includes(this.currentSlugPath);
   }
 
   get outletArgs() {
