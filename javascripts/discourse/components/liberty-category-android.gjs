@@ -11,7 +11,7 @@ export default class LibertyCategoryLinux extends Component {
   get allowedSlugs() {
     return [
       "android",      // ← replace with your actual slug
-      "android/handys",       
+      "android/handys-tablets",       
       "android/apps",
       "ndroid/libertyphone-grapheneos",          
       "android/tipps-tricks",
