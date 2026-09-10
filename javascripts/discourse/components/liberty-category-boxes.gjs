@@ -20,7 +20,7 @@ export default class LibertyCategoryBoxes extends Component {
       "android",
       "android/handys-und-tablets",
       "android/libertyphone-grapheneos"
-      "andoroid/tipps-und-tricks",
+      "android/tipps-und-tricks",
       "allgemein",
     ];
   }
