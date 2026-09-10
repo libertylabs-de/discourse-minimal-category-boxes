@@ -1,5 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
-import CategoryBoxes from "../components/category-boxes";
+// import CategoryBoxes from "../components/category-boxes";
+import CategoriesBoxes from "discourse/components/categories-boxes";
 
 export default apiInitializer((api) => {
   // Render the same component used by Modern Category + Group Boxes
