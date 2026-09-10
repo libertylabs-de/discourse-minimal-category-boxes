@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import LibertyCategoryAndroid from "./liberty-category-android";
+import CustomCategoryBoxes from "./custom-category-boxes";
 
 export default class LibertyCategoryAndroidRouter extends Component {
   @service site;
@@ -36,7 +36,7 @@ export default class LibertyCategoryAndroidRouter extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      <LibertyCategoryAndroid @outletArgs={{this.outletArgs}} />
+      <CustomCategoryBoxes @outletArgs={{this.outletArgs}} />
     {{/if}}
   </template>
 }
