@@ -1,16 +1,13 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import LibertyCategoryLinux from "./liberty-category-linux";
+import LibertyCategoryLinux from "./liberty-category-android";
 
-export default class LibertyCategoryLinux extends Component {
+export default class LibertyCategoryLinuxRouter extends Component {
   @service site;
   @service router;
 
-  // ── Which slugs should show THIS box set ──────────────────────────────────
-  // Add every slug that should trigger display: the parent + all subcategories
   get allowedSlugs() {
     return [
-      "linux",      // ← replace with your actual slug
       "linux/hardware",       
       "linux/software",     
       "linux/libertyos-ubuntu",          
@@ -18,15 +15,12 @@ export default class LibertyCategoryLinux extends Component {
     ];
   }
 
-  get currentSlug() {
-    const route = this.router.currentRoute;
-    // Walk up the route tree to find a slug param
-    let r = route;
+  get currentSlugPath() {
+    let r = this.router.currentRoute;
     while (r) {
-      if (r.params?.slug) return r.params.slug;
       if (r.params?.category_slug_path_with_id) {
-        // Discourse sometimes uses this format: "slug/id"
-        return r.params.category_slug_path_with_id.split("/")[0];
+        const parts = r.params.category_slug_path_with_id.split("/");
+        return parts.filter((p) => isNaN(p)).join("/");
       }
       r = r.parent;
     }
@@ -34,7 +28,7 @@ export default class LibertyCategoryLinux extends Component {
   }
 
   get shouldDisplay() {
-    return this.allowedSlugs.includes(this.currentSlug);
+    return this.allowedSlugs.includes(this.currentSlugPath);
   }
 
   get outletArgs() {
