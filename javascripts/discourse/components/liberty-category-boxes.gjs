@@ -14,6 +14,7 @@ export default class LibertyCategoryBoxes extends Component {
       "linux",   
       "linux/hardware",
       "linux/software",
+      "linux/system-einrichten-und-verwalten",
       "linux/tipps-und-tricks",
       "linux/libertyos-ubuntu",
       "android",
