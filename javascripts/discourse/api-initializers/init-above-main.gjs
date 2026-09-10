@@ -6,7 +6,7 @@ export default apiInitializer((api) => {
   // ── 1. Inject category boxes above main content ──────────────────────────
   api.renderInOutlet("below-site-header", LibertyCategoryBoxes);
 
-  // ── 2. Mirror #main-outer-wrapper's live width onto --main-outer-width ───
+  // ── 2. Mirror #main-outlet-wrapper's live width onto --main-outer-width ───
   // Allows SCSS to match the main content area width precisely,
   // regardless of sidebar open/collapsed/disabled state.
   if (typeof ResizeObserver === "undefined") return;
@@ -25,7 +25,7 @@ export default apiInitializer((api) => {
 
   const attachObserver = () => {
     if (attached) return;
-    const mainOuter = document.getElementById("main-outer-wrapper");
+    const mainOuter = document.getElementById("main-outlet-wrapper");
     if (!mainOuter) return;
 
     observer = new ResizeObserver(applyWidth);
@@ -41,7 +41,7 @@ export default apiInitializer((api) => {
     if (!attached) {
       attachObserver();
     } else {
-      // Re-observe after navigation in case #main-outer-wrapper was recreated
+      // Re-observe after navigation in case #main-outlet-wrapper was recreated
       observer?.disconnect();
       attached = false;
       attachObserver();
