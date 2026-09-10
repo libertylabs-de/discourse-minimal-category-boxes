@@ -204,7 +204,7 @@
       align-items: center;     /* Centers vertically */
       grid-auto-flow: column;
       grid-template-columns: 0fr 1fr 0fr;
-      column-gap: 48px;
+      column-gap: 36px;
       padding: 0;
 
       .category-logo {
@@ -274,7 +274,7 @@
 
   .category-box-heading {
     margin-bottom: 0px;
-    font-size: 1.65em;
+    font-size: 1.25em;
   }
 
   .description {
@@ -326,8 +326,9 @@
       column-gap: 24px;
 
       .category-logo {
-        height: 72px;
-        width: 72px;
+        height: 60px;
+        width: 60px;
+        border-radius: 4px;
         background-color: rgba(var(--tertiary-rgb), 0.1) !important;
       }
     }
