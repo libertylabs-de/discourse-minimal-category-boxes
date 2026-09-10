@@ -1,6 +1,6 @@
 import { apiInitializer } from "discourse/lib/api";
 //import LibertyCategoryBoxes from "../components/liberty-category-boxes";
-import LibertyCategoryAndroid      from "../components/liberty-category-linux";
+import LibertyCategoryLinux     from "../components/liberty-category-linux";
 import LibertyCategoryAndroid   from "../components/liberty-category-android";
 
 export default apiInitializer((api) => {
