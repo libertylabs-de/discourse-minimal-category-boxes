@@ -392,21 +392,21 @@
   box-sizing: border-box;
 }
 
-.below-site-header-outlet .custom-category-boxes-container,
 .below-site-header-outlet .custom-category-boxes,
+.below-site-header-outlet .custom-category-boxes-container,
 .below-site-header-outlet .category-boxes,
 .below-site-header-outlet .category-boxes-with-topics {
   box-sizing: border-box;
-
-  // CSS-only fallback for first paint before JS has measured
   width: 100%;
+
+  // ── CSS-only fallback (before JS measures #main-outer-wrapper) ────────────
   max-width: var(--d-max-width);
   margin-inline: auto;
 
-  // Once JS sets --main-outer-width, use it precisely
+  // ── Once JS sets --main-outer-width, use it precisely ────────────────────
   max-width: var(--main-outer-width, var(--d-max-width));
 
-  // Sidebar open: left-align to sit flush under the content area
+  // ── Sidebar open: left-align flush with the content area ─────────────────
   .has-sidebar-page & {
     margin-inline-start: 0;
     margin-inline-end: auto;
