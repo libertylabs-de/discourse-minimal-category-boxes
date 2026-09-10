@@ -21,7 +21,7 @@
 }
 
 .custom-category-boxes-container {
-  width: 100%;
+  width: var(--main-outer-width);
   margin-inline: auto;
   display: flex;
   flex-direction: column;
