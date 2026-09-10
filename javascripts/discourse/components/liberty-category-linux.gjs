@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import LibertyCategoryLinux from "./liberty-category-linux";
+import CustomCategoryBoxes from "./custom-category-boxes";
 
 export default class LibertyCategoryLinuxRouter extends Component {
   @service site;
@@ -8,9 +8,9 @@ export default class LibertyCategoryLinuxRouter extends Component {
 
   get allowedSlugs() {
     return [
-      "linux/hardware",       
-      "linux/software",     
-      "linux/libertyos-ubuntu",          
+      "linux/hardware",
+      "linux/software",
+      "linux/libertyos-ubuntu",
       "linux/andere-distros",
     ];
   }
@@ -37,7 +37,7 @@ export default class LibertyCategoryLinuxRouter extends Component {
 
   <template>
     {{#if this.shouldDisplay}}
-      <LibertyCategoryLinux @outletArgs={{this.outletArgs}} />
+      <CustomCategoryBoxes @outletArgs={{this.outletArgs}} />
     {{/if}}
   </template>
 }
