@@ -4,7 +4,6 @@
   margin: 1em auto;
   display: inline-block;
   font-size: 3em;
-  border-bottom: 2px solid var(--primary);
 }
 
 .category-boxes {
@@ -22,6 +21,8 @@
 
 .custom-category-boxes-container {
   width: 100%;
+  max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
