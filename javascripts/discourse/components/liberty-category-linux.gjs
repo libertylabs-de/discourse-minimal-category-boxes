@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CustomCategoryLinux from "./custom-category-linux";
+import LibertyCategoryLinux from "./liberty-category-linux";
 
 export default class LibertyCategoryLinux extends Component {
   @service site;
