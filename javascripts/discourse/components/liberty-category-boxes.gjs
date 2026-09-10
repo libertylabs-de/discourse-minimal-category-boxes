@@ -3,10 +3,10 @@ import { service } from "@ember/service";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 
 export default class LibertyCategoryBoxes extends Component {
-  @service categoryStore;
+  @service site;
 
   get categories() {
-    return this.categoryStore?.get("categories") || [];
+    return this.site.categories;
   }
 
   <template>
