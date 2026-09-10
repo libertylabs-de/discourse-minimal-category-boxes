@@ -216,12 +216,8 @@
         background: rgba(var(--tertiary-rgb), 0.1) !important;
 
         img {
-          height: 80%;
-          width: 80%;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
+          height: 100%;
+          width: 100%;
         }
 
         .category-abbreviation {
