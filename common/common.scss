@@ -377,6 +377,24 @@
   /*display: none !important;*/
 }
 
+/*.below-site-header-outlet {
+  width: 100%;
+}*/
+
+.below-site-header-outlet
+  .custom-category-boxes,
+.below-site-header-outlet
+  .custom-category-boxes-container,
+.below-site-header-outlet
+  .category-boxes,
+.below-site-header-outlet
+  .category-boxes-with-topics {
+  width: min(100% - 2rem, var(--d-max-width));
+  max-width: var(--d-max-width);
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
 .category-boxes-outlet-test {
   background: #ffeb3b;
   color: #111;
