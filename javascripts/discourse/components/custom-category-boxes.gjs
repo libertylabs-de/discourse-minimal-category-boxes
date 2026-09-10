@@ -22,7 +22,7 @@ export default class extends Component {
   }
 
   get isOnCategoryPage() {
-    return this.router.currentRoute?.name?.includes("category");
+    return this.router.currentRoute?.name?.includes("category") ?? false;
   }
 
   get hasAnySectionConfigured() {
@@ -35,19 +35,16 @@ export default class extends Component {
     );
   }
 
-  // ✅ Render headings when sections are configured, regardless of route
-  // (we're injecting above main, not relying on outlet route detection)
   get shouldRenderHeadings() {
     return !!this.hasAnySectionConfigured && !this.isOnCategoryPage;
   }
 
-  // ✅ Fallback categories: use outletArgs if provided, else all site categories
   get fallbackCategories() {
     return this.args.outletArgs?.categories ?? this.site.categories;
   }
 
   get noneSelected() {
-    return this.router.currentRoute?.name?.includes("None");
+    return this.router.currentRoute?.name?.includes("None") ?? false;
   }
 
   get firstCategories() {
