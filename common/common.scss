@@ -370,3 +370,9 @@
     }
   }
 }
+
+/* Hide the original category boxes that live inside #main-outlet */
+#main-outlet .category-boxes-container,
+#main-outlet .modern-category-boxes-container {
+  display: none !important;
+}
