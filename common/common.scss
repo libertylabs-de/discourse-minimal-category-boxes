@@ -212,7 +212,7 @@
         width: 72px;
         height: 72px;
         margin: 0;
-        background: rgba(var(--tertiary-rgb), 0.1) !important;
+        /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
 
         img {
           height: 100%;
@@ -227,9 +227,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 100px;
-          height: 100%;
-          min-height: 100px;
+        }
 
           .category-abbreviation {
             display: block;
