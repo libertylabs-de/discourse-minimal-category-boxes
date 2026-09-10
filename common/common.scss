@@ -165,7 +165,7 @@
   display: grid;
   grid-auto-flow: row;
   gap: 32px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   width: 100%;
 
@@ -176,7 +176,7 @@
     border-left-width: 0;
     border-radius: 12px;
     margin: 0 0;
-    max-height: 160px;
+    max-height: 140px;
     overflow: hidden;
     transition: all ease-out 0.2s;
     width: initial;
