@@ -16,6 +16,7 @@ export default class extends Component {
   }
 
   #allowedCategories(selectedCategories) {
+    if (!selectedCategories || selectedCategories.length === 0) return [];
     return this.site.categories.filter(
       (category) => selectedCategories.indexOf(category.id) !== -1
     );
@@ -48,33 +49,33 @@ export default class extends Component {
   }
 
   get firstCategories() {
-    return this.#allowedCategories(
-      settings.first_categories.split("|").map((id) => Number(id))
-    );
+    const raw = settings.first_categories;
+    if (!raw) return [];
+    return this.#allowedCategories(raw.split("|").map((id) => Number(id)));
   }
 
   get secondCategories() {
-    return this.#allowedCategories(
-      settings.second_categories.split("|").map((id) => Number(id))
-    );
+    const raw = settings.second_categories;
+    if (!raw) return [];
+    return this.#allowedCategories(raw.split("|").map((id) => Number(id)));
   }
 
   get thirdCategories() {
-    return this.#allowedCategories(
-      settings.third_categories.split("|").map((id) => Number(id))
-    );
+    const raw = settings.third_categories;
+    if (!raw) return [];
+    return this.#allowedCategories(raw.split("|").map((id) => Number(id)));
   }
 
   get fourthCategories() {
-    return this.#allowedCategories(
-      settings.fourth_categories.split("|").map((id) => Number(id))
-    );
+    const raw = settings.fourth_categories;
+    if (!raw) return [];
+    return this.#allowedCategories(raw.split("|").map((id) => Number(id)));
   }
 
   get fifthCategories() {
-    return this.#allowedCategories(
-      settings.fifth_categories.split("|").map((id) => Number(id))
-    );
+    const raw = settings.fifth_categories;
+    if (!raw) return [];
+    return this.#allowedCategories(raw.split("|").map((id) => Number(id)));
   }
 
   <template>
