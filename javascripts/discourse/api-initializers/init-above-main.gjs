@@ -1,11 +1,14 @@
 import { apiInitializer } from "discourse/lib/api";
 //import LibertyCategoryBoxes from "../components/liberty-category-boxes";
-import LibertyCategoryLinux      from "../components/liberty-category-linux";
+import LibertyCategoryAndroid      from "../components/liberty-category-linux";
+import LibertyCategoryAndroid   from "../components/liberty-category-android";
+
 export default apiInitializer((api) => {
 
   // ── 1. Inject category boxes above main content ──────────────────────────
   api.renderInOutlet("below-site-header", LibertyCategoryLinux);
-
+  api.renderInOutlet("below-site-header", LibertyCategoryAndroid);
+  
   // ── 2. Mirror #main-outlet-wrapper's live width onto --main-outer-width ──
   if (typeof ResizeObserver === "undefined") return;
 
