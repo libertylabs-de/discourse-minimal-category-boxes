@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
+import CategoriesBoxes from "discourse/components/categories-boxes";
 
 export default class LibertyCategoryBoxes extends Component {
   @service site;
