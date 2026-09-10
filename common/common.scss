@@ -387,35 +387,28 @@
   /*display: none !important;*/
 }
 
-/*.below-site-header-outlet {
+.below-site-header-outlet {
   width: 100%;
-}*/
-
-.below-site-header-outlet
-  .custom-category-boxes,
-.below-site-header-outlet
-  .custom-category-boxes-container,
-.below-site-header-outlet
-  .category-boxes,
-.below-site-header-outlet
-  .category-boxes-with-topics {
-  width: min(100% - 2rem, var(--d-max-width));
-  max-width: var(--d-max-width);
-  margin-inline: auto;
   box-sizing: border-box;
 }
 
-.category-boxes-outlet-test {
-  background: #ffeb3b;
-  color: #111;
-  font-weight: 700;
-  padding: 1rem;
-  text-align: center;
-}
+.below-site-header-outlet .custom-category-boxes-container,
+.below-site-header-outlet .custom-category-boxes,
+.below-site-header-outlet .category-boxes,
+.below-site-header-outlet .category-boxes-with-topics {
+  box-sizing: border-box;
 
-.below-site-header-outlet .category-boxes-outlet-test {
+  // CSS-only fallback for first paint before JS has measured
   width: 100%;
   max-width: var(--d-max-width);
   margin-inline: auto;
-  box-sizing: border-box;
+
+  // Once JS sets --main-outer-width, use it precisely
+  max-width: var(--main-outer-width, var(--d-max-width));
+
+  // Sidebar open: left-align to sit flush under the content area
+  .has-sidebar-page & {
+    margin-inline-start: 0;
+    margin-inline-end: auto;
+  }
 }
