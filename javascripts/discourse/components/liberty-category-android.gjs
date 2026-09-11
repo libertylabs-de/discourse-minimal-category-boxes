@@ -15,15 +15,22 @@ export default class LibertyCategoryAndroidRouter extends Component {
   }
 
   get currentSlugPath() {
-    let r = this.router.currentRoute;
-    while (r) {
-      if (r.params?.category_slug_path_with_id) {
-        const parts = r.params.category_slug_path_with_id.split("/");
-        return parts.filter((p) => isNaN(p)).join("/");
-      }
-      r = r.parent;
+  let route = this.router.currentRoute;
+
+  while (route) {
+    const raw = route.params?.category_slug_path_with_id;
+
+    if (typeof raw === "string" && raw.length > 0) {
+      return raw
+        .split("/")
+        .filter((part) => !/^\d+$/.test(part))
+        .join("/");
     }
-    return null;
+
+    route = route.parent;
+  }
+
+  return null;
   }
 
   get shouldDisplay() {
