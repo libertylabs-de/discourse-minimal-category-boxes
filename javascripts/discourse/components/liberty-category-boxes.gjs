@@ -3,43 +3,36 @@ import { service } from "@ember/service";
 import CustomCategoryBoxes from "./custom-category-boxes";
 
 export default class LibertyCategoryBoxes extends Component {
-  @service site;
   @service router;
-
-  get allowedSlugs() {
-    return [
-      "linux",
-      "linux/hardware",
-      "linux/software",
-      "linux/system-einrichten-und-verwalten",
-      "linux/tipps-und-tricks",
-      "linux/libertyos-ubuntu",
-      "android",
-      "android/handys-und-tablets",
-      "android/libertyphone-grapheneos",
-      "android/tipps-und-tricks",
-      "allgemein",
-    ];
-  }
+  @service site;
 
   get currentSlugPath() {
-    let r = this.router.currentRoute;
-    while (r) {
-      if (r.params?.category_slug_path_with_id) {
-        const parts = r.params.category_slug_path_with_id.split("/");
-        return parts.filter((p) => isNaN(p)).join("/");
+    let route = this.router.currentRoute;
+
+    while (route) {
+      const slugPath = route.params?.category_slug_path_with_id;
+
+      if (slugPath) {
+        return slugPath
+          .split("/")
+          .filter((part) => !/^\d+$/.test(part))
+          .join("/");
       }
-      r = r.parent;
+
+      route = route.parent;
     }
+
     return null;
   }
 
   get shouldDisplay() {
-    return this.allowedSlugs.includes(this.currentSlugPath);
+    return Boolean(this.currentSlugPath);
   }
 
   get outletArgs() {
-    return { categories: this.site.categories };
+    return {
+      categories: this.site.categories,
+    };
   }
 
   <template>
