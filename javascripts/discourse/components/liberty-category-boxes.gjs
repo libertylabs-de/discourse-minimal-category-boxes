@@ -1,10 +1,44 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import CategoriesBoxes from "discourse/components/categories-boxes";
+import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
+import CategoriesOnly from "discourse/components/categories-only";
 import CustomCategoryBoxes from "./custom-category-boxes";
+
+const SUBCATEGORY_COMPONENTS = {
+  boxes: CategoriesBoxes,
+  boxes_with_featured_topics: CategoriesBoxesWithTopics,
+  rows: CategoriesOnly,
+  rows_with_featured_topics: CategoriesOnly,
+};
 
 export default class LibertyCategoryBoxes extends Component {
   @service site;
   @service router;
+
+  get currentCategory() {
+    let route = this.router.currentRoute;
+
+    while (route) {
+      const model = route.model;
+
+      if (model?.category) {
+        return model.category;
+      }
+
+      if (model?.parentCategory) {
+        return model.parentCategory;
+      }
+
+      if (model?.subcategory) {
+        return model.subcategory;
+      }
+
+      route = route.parent;
+    }
+
+    return null;
+  }
 
   get currentSlugPath() {
     let route = this.router.currentRoute;
@@ -25,30 +59,61 @@ export default class LibertyCategoryBoxes extends Component {
     return null;
   }
 
-  /*
-   * Keep the boxes available on the homepage and category pages.
-   * This avoids hard-coded Android/Linux slug lists during recovery.
-   */
-  get shouldDisplay() {
+  get shouldDisplayGlobalBoxes() {
     const routeName = this.router.currentRouteName ?? "";
 
     return (
       routeName === "discovery.index" ||
-      routeName === "discovery.categories" ||
-      routeName.startsWith("discovery.category") ||
-      routeName === "discovery.subcategories"
+      routeName === "discovery.categories"
     );
   }
 
-  get outletArgs() {
+  get shouldDisplaySubcategoryBoxes() {
+    const category = this.currentCategory;
+
+    if (!category) {
+      return false;
+    }
+
+    return Boolean(
+      category.show_subcategory_list &&
+        category.subcategories?.length
+    );
+  }
+
+  get subcategoryComponent() {
+    const style =
+      this.currentCategory?.subcategory_list_style ??
+      "boxes";
+
+    return SUBCATEGORY_COMPONENTS[style] ?? CategoriesBoxes;
+  }
+
+  get globalCategories() {
+    return this.site.categories ?? [];
+  }
+
+  get subcategories() {
+    return this.currentCategory?.subcategories ?? [];
+  }
+
+  get globalOutletArgs() {
     return {
-      categories: this.site.categories ?? [],
+      categories: this.globalCategories,
     };
   }
 
   <template>
-    {{#if this.shouldDisplay}}
-      <CustomCategoryBoxes @outletArgs={{this.outletArgs}} />
+    {{#if this.shouldDisplayGlobalBoxes}}
+      <CustomCategoryBoxes
+        @outletArgs={{this.globalOutletArgs}}
+      />
+    {{else if this.shouldDisplaySubcategoryBoxes}}
+      <div class="custom-category-boxes-container">
+        <this.subcategoryComponent
+          @categories={{this.subcategories}}
+        />
+      </div>
     {{/if}}
   </template>
 }
