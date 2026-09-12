@@ -1,16 +1,10 @@
 import { apiInitializer } from "discourse/lib/api";
 import LibertyCategoryBoxes from "../components/liberty-category-boxes";
-import LibertyMainCategories from "../components/liberty-main-categories";
 
 export default apiInitializer((api) => {
   api.renderInOutlet(
     "below-site-header",
     LibertyCategoryBoxes
-  );
-
-  api.renderInOutlet(
-    "above-main-container",
-    LibertyMainCategories
   );
 
   if (typeof ResizeObserver === "undefined") {
@@ -44,19 +38,18 @@ export default apiInitializer((api) => {
 
     observer = new ResizeObserver(applyWidth);
     observer.observe(mainOutletWrapper);
+
     attached = true;
   };
 
   const refreshObserver = () => {
-    if (!attached) {
-      attachObserver();
-      return;
-    }
-
     observer?.disconnect();
     observer = null;
     attached = false;
-    attachObserver();
+
+    requestAnimationFrame(() => {
+      attachObserver();
+    });
   };
 
   attachObserver();
