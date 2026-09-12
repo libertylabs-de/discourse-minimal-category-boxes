@@ -536,13 +536,13 @@
   position: absolute;
   z-index: -2;
   inset: 0;
-  background-color: var(--secondary);
+  //background-color: var(--secondary);
   background-image: var(--liberty-category-background);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
   content: "";
-  opacity: 0.25;
+  //opacity: 0.25;
 }
 
 .liberty-category-area::after {
