@@ -532,30 +532,47 @@
 
 .liberty-category-header-inner {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
   padding: var(--space-6) 0 var(--space-4);
-  text-align: center;
+  text-align: left;
 }
 
 .liberty-category-header-inner h1 {
+  order: 1;
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
+  padding: 0;
   color: var(--primary);
-  font-size: 2.5em;
+  font-size: 3em;
+  line-height: 1.2;
+  text-align: left;
 }
 
 .liberty-category-header-inner p {
-  max-width: 60rem;
-  margin: var(--space-3) auto 0;
+  order: 3;
+  flex: 1 0 100%;
+  width: 100%;
+  max-width: none;
+  margin: 0.75rem 0 0;
+  padding: 0;
   color: var(--primary-high);
   font-size: 1.1em;
   line-height: 1.5;
+  text-align: left;
 }
 
 .liberty-category-header-inner
   .category-logo {
+  order: 2;
+  flex: 0 0 auto;
   width: 64px;
   height: 64px;
-  margin-bottom: var(--space-3);
+  margin: 0;
+  padding: 0;
+  object-fit: contain;
 }
-
