@@ -85,11 +85,26 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get categoryBackgroundUrl() {
+    const category = this.currentCategory;
+
     return (
-      this.currentCategory?.uploaded_background ||
-      this.currentCategory?.background_url ||
+      category?.uploaded_background?.url ||
+      category?.uploaded_background ||
+      category?.background_url ||
       null
     );
+  }
+
+  get categoryBackgroundStyle() {
+    const url = this.categoryBackgroundUrl;
+
+    if (!url) {
+      return null;
+    }
+
+    const escapedUrl = url.replace(/'/g, "\\'");
+
+    return `--liberty-category-background: url('${escapedUrl}')`;
   }
 
   <template>
@@ -100,14 +115,7 @@ export default class LibertyCategoryBoxes extends Component {
     {{else if this.shouldDisplaySubcategories}}
       <div
         class="liberty-category-area"
-        style={{if
-          this.categoryBackgroundUrl
-          (concat
-            "--liberty-category-background: url('"
-            this.categoryBackgroundUrl
-            "')"
-          )
-        }}
+        style={{this.categoryBackgroundStyle}}
       >
         <div class="liberty-category-content">
           <LibertyCategoryHeader
