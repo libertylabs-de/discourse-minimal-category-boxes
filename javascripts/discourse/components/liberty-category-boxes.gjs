@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import CategoryBoxes from "./category-boxes";
 import CustomCategoryBoxes from "./custom-category-boxes";
+import LibertyCategoryHeader from "./liberty-category-header";
 
 export default class LibertyCategoryBoxes extends Component {
   @service router;
@@ -19,9 +20,8 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get isCategoryPage() {
-    return (
-      this.currentRouteName === "discovery.category" ||
-      this.currentRouteName === "discovery.subcategories"
+    return this.currentRouteName.startsWith(
+      "discovery.category"
     );
   }
 
@@ -55,10 +55,8 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
-    const categories = this.site.categories ?? [];
-
     return (
-      categories.find((category) => {
+      (this.site.categories ?? []).find((category) => {
         return (
           category.slug === slugPath ||
           category.fullSlug === slugPath ||
@@ -75,8 +73,7 @@ export default class LibertyCategoryBoxes extends Component {
   get shouldDisplaySubcategories() {
     return Boolean(
       this.isCategoryPage &&
-        this.currentCategory &&
-        this.currentCategory.show_subcategory_list &&
+        this.currentCategory?.show_subcategory_list &&
         this.subcategories.length > 0
     );
   }
@@ -93,6 +90,8 @@ export default class LibertyCategoryBoxes extends Component {
         @outletArgs={{this.globalOutletArgs}}
       />
     {{else if this.shouldDisplaySubcategories}}
+      <LibertyCategoryHeader />
+
       <div class="custom-category-boxes-container">
         <CategoryBoxes
           @categories={{this.subcategories}}
