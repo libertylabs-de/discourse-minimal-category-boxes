@@ -208,17 +208,18 @@
 
       .category-logo {
         align-self: center;
-        display: inline-block;
+        display: flex;
         width: 60px;
         height: 60px;
+        justify-content: center;
+        align-items: center;
         border-radius: 8px;
         background: rgba(var(--tertiary-rgb), 0.1) !important;
 
         img {
           height: 90%;
           width: 90%;
-          justify-content: center;
-          align-items: center;
+
         }
 
         .category-abbreviation {
