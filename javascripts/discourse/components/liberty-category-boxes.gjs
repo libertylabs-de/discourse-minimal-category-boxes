@@ -20,13 +20,74 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get isCategoryPage() {
-    return this.currentRouteName.startsWith(
-      "discovery.category"
+    return this.currentRouteName === "discovery.category";
+  }
+
+  get currentSlugPath() {
+    let route = this.router.currentRoute;
+
+    while (route) {
+      const rawSlugPath =
+        route.params?.category_slug_path_with_id;
+
+      if (
+        typeof rawSlugPath === "string" &&
+        rawSlugPath.length > 0
+      ) {
+        return rawSlugPath
+          .split("/")
+          .filter((part) => !/^\d+$/.test(part))
+          .join("/");
+      }
+
+      route = route.parent;
+    }
+
+    return null;
+  }
+
+  get currentCategory() {
+    const slugPath = this.currentSlugPath;
+
+    if (!slugPath) {
+      return null;
+    }
+
+    return (
+      (this.site.categories ?? []).find((category) => {
+        return (
+          category.slug === slugPath ||
+          category.fullSlug === slugPath ||
+          category.slugPath === slugPath
+        );
+      }) ?? null
     );
   }
 
-  // Keep your existing currentSlugPath, currentCategory,
-  // subcategories, and categoryBackgroundStyle getters here.
+  get subcategories() {
+    return this.currentCategory?.subcategories ?? [];
+  }
+
+  get categoryBackgroundUrl() {
+    const category = this.currentCategory;
+
+    return (
+      category?.uploaded_background?.url ||
+      category?.uploaded_background ||
+      category?.background_url ||
+      null
+    );
+  }
+
+  get categoryBackgroundStyle() {
+    const url = this.categoryBackgroundUrl;
+
+    if (!url) {
+      return null;
+    }
+
+    return `--liberty-category-background: url("${url}")`;
+  }
 
   get shouldDisplaySubcategories() {
     return Boolean(
@@ -36,9 +97,18 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
+  get globalOutletArgs() {
+    return {
+      categories: this.site.categories ?? [],
+    };
+  }
+
   <template>
-    {{!-- Deliberately empty on /categories. --}}
-    {{#if this.shouldDisplaySubcategories}}
+    {{#if this.isCategoriesPage}}
+      <CustomCategoryBoxes
+        @outletArgs={{this.globalOutletArgs}}
+      />
+    {{else if this.shouldDisplaySubcategories}}
       <div
         class="liberty-category-area"
         style={{this.categoryBackgroundStyle}}
