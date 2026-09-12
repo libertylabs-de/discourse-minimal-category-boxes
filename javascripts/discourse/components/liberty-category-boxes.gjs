@@ -2,13 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/application";
 import { service } from "@ember/service";
 import CategoriesBoxes from "discourse/components/categories-boxes";
-import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
 import CustomCategoryBoxes from "./custom-category-boxes";
-
-const SUBCATEGORY_COMPONENTS = {
-  boxes: CategoriesBoxes,
-  boxes_with_featured_topics: CategoriesBoxesWithTopics,
-};
 
 export default class LibertyCategoryBoxes extends Component {
   @service router;
@@ -44,20 +38,6 @@ export default class LibertyCategoryBoxes extends Component {
     return this.currentCategory?.subcategories ?? [];
   }
 
-  get subcategoryStyle() {
-    return (
-      this.currentCategory?.subcategory_list_style ??
-      "boxes"
-    );
-  }
-
-  get subcategoryComponent() {
-    return (
-      SUBCATEGORY_COMPONENTS[this.subcategoryStyle] ??
-      CategoriesBoxes
-    );
-  }
-
   get shouldDisplaySubcategories() {
     return Boolean(
       this.isCategoryPage &&
@@ -78,7 +58,7 @@ export default class LibertyCategoryBoxes extends Component {
       />
     {{else if this.shouldDisplaySubcategories}}
       <div class="custom-category-boxes-container">
-        <this.subcategoryComponent
+        <CategoriesBoxes
           @categories={{this.subcategories}}
         />
       </div>
