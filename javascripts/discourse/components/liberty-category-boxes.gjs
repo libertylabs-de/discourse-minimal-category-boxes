@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/application";
 import { service } from "@ember/service";
 import CategoriesBoxes from "discourse/components/categories-boxes";
 import CustomCategoryBoxes from "./custom-category-boxes";
@@ -26,21 +25,55 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
-  get categoryController() {
-    return getOwner(this)?.lookup("controller:category");
-  }
-
   get currentCategory() {
-    return this.categoryController?.category ?? null;
+    let route = this.router.currentRoute;
+
+    while (route) {
+      const model = route.model;
+
+      if (model?.category) {
+        return model.category;
+      }
+
+      if (model?.parentCategory) {
+        return model.parentCategory;
+      }
+
+      if (model?.subcategories) {
+        return model;
+      }
+
+      if (model?.category_id && model?.subcategories) {
+        return model;
+      }
+
+      route = route.parent;
+    }
+
+    return null;
   }
 
   get subcategories() {
     return this.currentCategory?.subcategories ?? [];
   }
 
+  get subcategoryListEnabled() {
+    return Boolean(
+      this.currentCategory?.show_subcategory_list
+    );
+  }
+
+  get subcategoryListStyle() {
+    return (
+      this.currentCategory?.subcategory_list_style ??
+      "boxes"
+    );
+  }
+
   get shouldDisplaySubcategories() {
     return Boolean(
       this.isCategoryPage &&
+        this.subcategoryListEnabled &&
         this.subcategories.length > 0
     );
   }
