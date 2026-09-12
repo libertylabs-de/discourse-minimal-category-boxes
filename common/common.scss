@@ -531,20 +531,25 @@
 }
 
 .liberty-category-header-inner {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  grid-template-rows: auto auto;
+  column-gap: var(--space-4);
+  align-items: start;
   width: 100%;
   padding: var(--space-6) 0 var(--space-4);
-  text-align: left;
+  box-sizing: border-box;
 }
 
-.liberty-category-header-inner h1 {
-  order: 1;
-  flex: 1 1 auto;
+.liberty-category-header-title {
+  grid-column: 1;
+  grid-row: 1 / span 2;
   min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.liberty-category-header-title h1 {
   margin: 0;
   padding: 0;
   color: var(--primary);
@@ -553,12 +558,8 @@
   text-align: left;
 }
 
-.liberty-category-header-inner p {
-  order: 3;
-  flex: 1 0 100%;
-  width: 100%;
-  max-width: none;
-  margin: 0.75rem 0 0;
+.liberty-category-header-title p {
+  margin: var(--space-3) 0 0;
   padding: 0;
   color: var(--primary-high);
   font-size: 1.1em;
@@ -566,10 +567,11 @@
   text-align: left;
 }
 
-.liberty-category-header-inner
-  .category-logo {
-  order: 2;
-  flex: 0 0 auto;
+.liberty-category-header-inner .category-logo {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  align-self: start;
   width: 64px;
   height: 64px;
   margin: 0;
