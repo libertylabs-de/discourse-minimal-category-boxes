@@ -175,7 +175,7 @@
     border-left-width: 0;
     border-radius: 12px;
     margin: 0 0;
-    max-height: 144px;
+    max-height: 120px;
     overflow: hidden;
     transition: all ease-out 0.2s;
     width: initial;
@@ -209,8 +209,8 @@
       .category-logo {
         align-self: center;
         display: inline-block;
-        width: 72px;
-        height: 72px;
+        width: 60px;
+        height: 60px;
         margin: 0;
         /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
 
@@ -247,10 +247,9 @@
     align-items: baseline;
     color: var(--primary);
     display: inline-flex;
-    font-size: 1.125em;
-    font-weight: 600;
+    font-size: 1em;
     letter-spacing: 0.03em;
-    line-height: 140%;
+    line-height: 120%;
     margin-top: 0;
     margin-bottom: 0;
     text-align: left;
