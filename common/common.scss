@@ -520,3 +520,42 @@
     grid-template-columns: 1fr;
   }
 }
+
+// Header Styling appkied to Below-Header-Boxes to resamble Discourse Meta Design
+
+.liberty-category-header {
+  width: var(--main-outer-width, var(--d-max-width));
+  max-width: var(--main-outer-width, var(--d-max-width));
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
+.liberty-category-header-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-6) 0 var(--space-4);
+  text-align: center;
+}
+
+.liberty-category-header-inner h1 {
+  margin: 0;
+  color: var(--primary);
+  font-size: 2.5em;
+}
+
+.liberty-category-header-inner p {
+  max-width: 60rem;
+  margin: var(--space-3) auto 0;
+  color: var(--primary-high);
+  font-size: 1.1em;
+  line-height: 1.5;
+}
+
+.liberty-category-header-inner
+  .category-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--space-3);
+}
+
