@@ -13,34 +13,6 @@ export default class LibertyCategoryBoxes extends Component {
   @service site;
   @service router;
 
-  get currentCategory() {
-    let route = this.router.currentRoute;
-
-    while (route) {
-      const model = route.model;
-
-      if (model?.category) {
-        return model.category;
-      }
-
-      if (model?.parentCategory) {
-        return model.parentCategory;
-      }
-
-      if (model?.subcategory) {
-        return model.subcategory;
-      }
-
-      if (model?.slug && model?.subcategories) {
-        return model;
-      }
-
-      route = route.parent;
-    }
-
-    return null;
-  }
-
   get isCategoriesPage() {
     return (
       this.router.currentRouteName === "discovery.index" ||
@@ -48,25 +20,41 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
-  get shouldDisplaySubcategories() {
-    const category = this.currentCategory;
-
-    return Boolean(
-      !this.isCategoriesPage &&
-        category?.show_subcategory_list &&
-        category?.subcategories?.length
+  get isCategoryPage() {
+    return (
+      this.router.currentRouteName === "discovery.category" ||
+      this.router.currentRouteName === "discovery.subcategories"
     );
   }
 
-  get subcategoryComponent() {
-    const style =
-      this.currentCategory?.subcategory_list_style ?? "boxes";
+  get categoryController() {
+    return this.router.lookup("controller:category");
+  }
 
-    return SUBCATEGORY_COMPONENTS[style] ?? CategoriesBoxes;
+  get currentCategory() {
+    return this.categoryController?.category;
   }
 
   get subcategories() {
     return this.currentCategory?.subcategories ?? [];
+  }
+
+  get subcategoryStyle() {
+    return this.currentCategory?.subcategory_list_style ?? "boxes";
+  }
+
+  get subcategoryComponent() {
+    return (
+      SUBCATEGORY_COMPONENTS[this.subcategoryStyle] ??
+      CategoriesBoxes
+    );
+  }
+
+  get shouldDisplaySubcategories() {
+    return Boolean(
+      this.isCategoryPage &&
+        this.subcategories.length
+    );
   }
 
   get globalOutletArgs() {
