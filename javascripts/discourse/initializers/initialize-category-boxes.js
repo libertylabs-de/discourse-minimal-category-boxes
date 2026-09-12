@@ -1,11 +1,16 @@
 import { apiInitializer } from "discourse/lib/api";
 import LibertyCategoryBoxes from "../components/liberty-category-boxes";
+import LibertyMainCategories from "../components/liberty-main-categories";
 
 export default apiInitializer((api) => {
-  // Render exactly one category-box tree in the outlet.
   api.renderInOutlet(
     "below-site-header",
     LibertyCategoryBoxes
+  );
+
+  api.renderInOutlet(
+    "above-main-container",
+    LibertyMainCategories
   );
 
   if (typeof ResizeObserver === "undefined") {
