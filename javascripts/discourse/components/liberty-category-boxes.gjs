@@ -25,26 +25,21 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
-  get currentCategory() {
+  get currentSlugPath() {
     let route = this.router.currentRoute;
 
     while (route) {
-      const model = route.model;
+      const rawSlugPath =
+        route.params?.category_slug_path_with_id;
 
-      if (model?.category) {
-        return model.category;
-      }
-
-      if (model?.parentCategory) {
-        return model.parentCategory;
-      }
-
-      if (model?.subcategories) {
-        return model;
-      }
-
-      if (model?.category_id && model?.subcategories) {
-        return model;
+      if (
+        typeof rawSlugPath === "string" &&
+        rawSlugPath.length > 0
+      ) {
+        return rawSlugPath
+          .split("/")
+          .filter((part) => !/^\d+$/.test(part))
+          .join("/");
       }
 
       route = route.parent;
@@ -53,27 +48,35 @@ export default class LibertyCategoryBoxes extends Component {
     return null;
   }
 
+  get currentCategory() {
+    const slugPath = this.currentSlugPath;
+
+    if (!slugPath) {
+      return null;
+    }
+
+    const categories = this.site.categories ?? [];
+
+    return (
+      categories.find((category) => {
+        return (
+          category.slug === slugPath ||
+          category.fullSlug === slugPath ||
+          category.slugPath === slugPath
+        );
+      }) ?? null
+    );
+  }
+
   get subcategories() {
     return this.currentCategory?.subcategories ?? [];
-  }
-
-  get subcategoryListEnabled() {
-    return Boolean(
-      this.currentCategory?.show_subcategory_list
-    );
-  }
-
-  get subcategoryListStyle() {
-    return (
-      this.currentCategory?.subcategory_list_style ??
-      "boxes"
-    );
   }
 
   get shouldDisplaySubcategories() {
     return Boolean(
       this.isCategoryPage &&
-        this.subcategoryListEnabled &&
+        this.currentCategory &&
+        this.currentCategory.show_subcategory_list &&
         this.subcategories.length > 0
     );
   }
