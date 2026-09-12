@@ -2,14 +2,11 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
-import CategoriesOnly from "discourse/components/categories-only";
 import CustomCategoryBoxes from "./custom-category-boxes";
 
 const SUBCATEGORY_COMPONENTS = {
   boxes: CategoriesBoxes,
   boxes_with_featured_topics: CategoriesBoxesWithTopics,
-  rows: CategoriesOnly,
-  rows_with_featured_topics: CategoriesOnly,
 };
 
 export default class LibertyCategoryBoxes extends Component {
@@ -34,23 +31,8 @@ export default class LibertyCategoryBoxes extends Component {
         return model.subcategory;
       }
 
-      route = route.parent;
-    }
-
-    return null;
-  }
-
-  get currentSlugPath() {
-    let route = this.router.currentRoute;
-
-    while (route) {
-      const rawSlugPath = route.params?.category_slug_path_with_id;
-
-      if (typeof rawSlugPath === "string" && rawSlugPath.length > 0) {
-        return rawSlugPath
-          .split("/")
-          .filter((part) => !/^\d+$/.test(part))
-          .join("/");
+      if (model?.slug && model?.subcategories) {
+        return model;
       }
 
       route = route.parent;
@@ -59,38 +41,28 @@ export default class LibertyCategoryBoxes extends Component {
     return null;
   }
 
-  get shouldDisplayGlobalBoxes() {
-    const routeName = this.router.currentRouteName ?? "";
-
+  get isCategoriesPage() {
     return (
-      routeName === "discovery.index" ||
-      routeName === "discovery.categories"
+      this.router.currentRouteName === "discovery.index" ||
+      this.router.currentRouteName === "discovery.categories"
     );
   }
 
-  get shouldDisplaySubcategoryBoxes() {
+  get shouldDisplaySubcategories() {
     const category = this.currentCategory;
 
-    if (!category) {
-      return false;
-    }
-
     return Boolean(
-      category.show_subcategory_list &&
-        category.subcategories?.length
+      !this.isCategoriesPage &&
+        category?.show_subcategory_list &&
+        category?.subcategories?.length
     );
   }
 
   get subcategoryComponent() {
     const style =
-      this.currentCategory?.subcategory_list_style ??
-      "boxes";
+      this.currentCategory?.subcategory_list_style ?? "boxes";
 
     return SUBCATEGORY_COMPONENTS[style] ?? CategoriesBoxes;
-  }
-
-  get globalCategories() {
-    return this.site.categories ?? [];
   }
 
   get subcategories() {
@@ -99,16 +71,16 @@ export default class LibertyCategoryBoxes extends Component {
 
   get globalOutletArgs() {
     return {
-      categories: this.globalCategories,
+      categories: this.site.categories ?? [],
     };
   }
 
   <template>
-    {{#if this.shouldDisplayGlobalBoxes}}
+    {{#if this.isCategoriesPage}}
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
-    {{else if this.shouldDisplaySubcategoryBoxes}}
+    {{else if this.shouldDisplaySubcategories}}
       <div class="custom-category-boxes-container">
         <this.subcategoryComponent
           @categories={{this.subcategories}}
