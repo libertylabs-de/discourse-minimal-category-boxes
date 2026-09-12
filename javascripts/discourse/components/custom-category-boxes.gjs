@@ -1,43 +1,49 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CustomCategoryBoxes from "./custom-category-boxes";
+import CategoryBoxes from "./category-boxes";
+import CategoryHeader from "./category-header";
 
-export default class LibertyCategoryBoxes extends Component {
+export default class CustomCategoryBoxes extends Component {
   @service router;
   @service site;
 
-  get currentSlugPath() {
-    let route = this.router.currentRoute;
+  get classNames() {
+    const classes = ["custom-category-boxes-container"];
 
-    while (route) {
-      const slugPath = route.params?.category_slug_path_with_id;
-
-      if (slugPath) {
-        return slugPath
-          .split("/")
-          .filter((part) => !/^\d+$/.test(part))
-          .join("/");
-      }
-
-      route = route.parent;
+    if (this.noneSelected) {
+      classes.push("none-selected");
     }
 
-    return null;
+    return classes.join(" ");
   }
 
-  get shouldDisplay() {
-    return Boolean(this.currentSlugPath);
+  get categories() {
+    return this.args.outletArgs?.categories ?? this.site.categories ?? [];
   }
 
-  get outletArgs() {
-    return {
-      categories: this.site.categories,
-    };
+  get isOnCategoryPage() {
+    return this.router.currentRouteName?.includes("category") ?? false;
+  }
+
+  get noneSelected() {
+    return this.router.currentRouteName?.includes("None") ?? false;
+  }
+
+  /*
+   * First recovery version:
+   * render all categories and bypass the broken `settings` reference.
+   *
+   * Reintroduce configured sections only after the boxes work again.
+   */
+  get shouldRenderHeadings() {
+    return false;
   }
 
   <template>
-    {{#if this.shouldDisplay}}
-      <CustomCategoryBoxes @outletArgs={{this.outletArgs}} />
-    {{/if}}
+    <div class={{this.classNames}}>
+      {{#if this.categories.length}}
+        <CategoryBoxes @categories={{this.categories}} />
+      {{/if}}
+    </div>
   </template>
 }
