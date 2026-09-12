@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import CategoriesBoxes from "discourse/components/categories-boxes";
+import CategoryBoxes from "./category-boxes";
 import CustomCategoryBoxes from "./custom-category-boxes";
 
 export default class LibertyCategoryBoxes extends Component {
@@ -94,7 +94,7 @@ export default class LibertyCategoryBoxes extends Component {
       />
     {{else if this.shouldDisplaySubcategories}}
       <div class="custom-category-boxes-container">
-        <CategoriesBoxes
+        <CategoryBoxes
           @categories={{this.subcategories}}
         />
       </div>
