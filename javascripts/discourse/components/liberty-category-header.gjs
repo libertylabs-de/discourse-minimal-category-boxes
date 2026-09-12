@@ -1,70 +1,20 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 
 export default class LibertyCategoryHeader extends Component {
-  @service router;
-  @service site;
-
-  get currentSlugPath() {
-    let route = this.router.currentRoute;
-
-    while (route) {
-      const rawSlugPath =
-        route.params?.category_slug_path_with_id;
-
-      if (
-        typeof rawSlugPath === "string" &&
-        rawSlugPath.length > 0
-      ) {
-        return rawSlugPath
-          .split("/")
-          .filter((part) => !/^\d+$/.test(part))
-          .join("/");
-      }
-
-      route = route.parent;
-    }
-
-    return null;
-  }
-
   get category() {
-    const slugPath = this.currentSlugPath;
-
-    if (!slugPath) {
-      return null;
-    }
-
-    return (
-      (this.site.categories ?? []).find((category) => {
-        return (
-          category.slug === slugPath ||
-          category.fullSlug === slugPath ||
-          category.slugPath === slugPath
-        );
-      }) ?? null
-    );
+    return this.args.category;
   }
 
   get shouldDisplay() {
-    const routeName = this.router.currentRouteName ?? "";
-
-    return Boolean(
-      routeName.startsWith("discovery.category") &&
-        this.category
-    );
+    return Boolean(this.category);
   }
 
   <template>
     {{#if this.shouldDisplay}}
-      <div class="liberty-category-header">
-        <div class="liberty-category-header-inner">
-          {{#if this.category.uploaded_logo.url}}
-            <CategoryLogo @category={{this.category}} />
-          {{/if}}
-
+      <div class="liberty-category-header-inner">
+        <div class="liberty-category-header-title">
           <h1>
             <CategoryTitleBefore
               @category={{this.category}}
@@ -78,6 +28,10 @@ export default class LibertyCategoryHeader extends Component {
             </p>
           {{/if}}
         </div>
+
+        {{#if this.category.uploaded_logo.url}}
+          <CategoryLogo @category={{this.category}} />
+        {{/if}}
       </div>
     {{/if}}
   </template>
