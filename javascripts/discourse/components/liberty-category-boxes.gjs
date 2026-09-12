@@ -84,18 +84,42 @@ export default class LibertyCategoryBoxes extends Component {
     };
   }
 
+  get categoryBackgroundUrl() {
+    return (
+      this.currentCategory?.uploaded_background ||
+      this.currentCategory?.background_url ||
+      null
+    );
+  }
+
   <template>
     {{#if this.isCategoriesPage}}
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
     {{else if this.shouldDisplaySubcategories}}
-      <LibertyCategoryHeader />
+      <div
+        class="liberty-category-area"
+        style={{if
+          this.categoryBackgroundUrl
+          (concat
+            "--liberty-category-background: url('"
+            this.categoryBackgroundUrl
+            "')"
+          )
+        }}
+      >
+        <div class="liberty-category-content">
+          <LibertyCategoryHeader
+            @category={{this.currentCategory}}
+          />
 
-      <div class="custom-category-boxes-container">
-        <CategoryBoxes
-          @categories={{this.subcategories}}
-        />
+          <div class="custom-category-boxes-container">
+            <CategoryBoxes
+              @categories={{this.subcategories}}
+            />
+          </div>
+        </div>
       </div>
     {{/if}}
   </template>
