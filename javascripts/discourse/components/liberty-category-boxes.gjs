@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { getOwner } from "@ember/application";
 import { service } from "@ember/service";
 import CategoriesBoxes from "discourse/components/categories-boxes";
 import CategoriesBoxesWithTopics from "discourse/components/categories-boxes-with-topics";
@@ -10,29 +11,33 @@ const SUBCATEGORY_COMPONENTS = {
 };
 
 export default class LibertyCategoryBoxes extends Component {
-  @service site;
   @service router;
+  @service site;
+
+  get currentRouteName() {
+    return this.router.currentRouteName ?? "";
+  }
 
   get isCategoriesPage() {
     return (
-      this.router.currentRouteName === "discovery.index" ||
-      this.router.currentRouteName === "discovery.categories"
+      this.currentRouteName === "discovery.index" ||
+      this.currentRouteName === "discovery.categories"
     );
   }
 
   get isCategoryPage() {
     return (
-      this.router.currentRouteName === "discovery.category" ||
-      this.router.currentRouteName === "discovery.subcategories"
+      this.currentRouteName === "discovery.category" ||
+      this.currentRouteName === "discovery.subcategories"
     );
   }
 
   get categoryController() {
-    return this.router.lookup("controller:category");
+    return getOwner(this)?.lookup("controller:category");
   }
 
   get currentCategory() {
-    return this.categoryController?.category;
+    return this.categoryController?.category ?? null;
   }
 
   get subcategories() {
@@ -40,7 +45,10 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get subcategoryStyle() {
-    return this.currentCategory?.subcategory_list_style ?? "boxes";
+    return (
+      this.currentCategory?.subcategory_list_style ??
+      "boxes"
+    );
   }
 
   get subcategoryComponent() {
@@ -53,7 +61,7 @@ export default class LibertyCategoryBoxes extends Component {
   get shouldDisplaySubcategories() {
     return Boolean(
       this.isCategoryPage &&
-        this.subcategories.length
+        this.subcategories.length > 0
     );
   }
 
