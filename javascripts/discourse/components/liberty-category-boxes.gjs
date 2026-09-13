@@ -54,16 +54,16 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
-    const pathParts = this.pathname
+    const parts = this.pathname
       .replace(/^\/c\//, "")
       .split("/")
       .filter(Boolean);
 
-    if (pathParts.length === 0) {
+    if (parts.length === 0) {
       return null;
     }
 
-    return pathParts
+    return parts
       .filter((part) => !/^\d+$/.test(part))
       .join("/");
   }
@@ -93,6 +93,29 @@ export default class LibertyCategoryBoxes extends Component {
     return null;
   }
 
+  findCategory(categories, slugPath) {
+    for (const category of categories ?? []) {
+      if (
+        category.fullSlug === slugPath ||
+        category.slugPath === slugPath ||
+        category.slug === slugPath
+      ) {
+        return category;
+      }
+
+      const nestedCategory = this.findCategory(
+        category.subcategories,
+        slugPath
+      );
+
+      if (nestedCategory) {
+        return nestedCategory;
+      }
+    }
+
+    return null;
+  }
+
   get currentCategory() {
     const slugPath = this.currentSlugPath;
 
@@ -100,16 +123,9 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
-    const categories = this.site.categories ?? [];
-
-    return (
-      categories.find((category) => {
-        return (
-          category.fullSlug === slugPath ||
-          category.slugPath === slugPath ||
-          category.slug === slugPath
-        );
-      }) ?? null
+    return this.findCategory(
+      this.site.categories ?? [],
+      slugPath
     );
   }
 
