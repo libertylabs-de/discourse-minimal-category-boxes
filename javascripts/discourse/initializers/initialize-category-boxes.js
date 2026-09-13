@@ -12,7 +12,6 @@ export default apiInitializer((api) => {
   }
 
   let observer = null;
-  let attached = false;
 
   const applyWidth = ([entry]) => {
     if (!entry) {
@@ -35,26 +34,13 @@ export default apiInitializer((api) => {
     }
 
     observer?.disconnect();
-
     observer = new ResizeObserver(applyWidth);
     observer.observe(mainOutletWrapper);
-
-    attached = true;
-  };
-
-  const refreshObserver = () => {
-    observer?.disconnect();
-    observer = null;
-    attached = false;
-
-    requestAnimationFrame(() => {
-      attachObserver();
-    });
   };
 
   attachObserver();
 
   api.onPageChange(() => {
-    refreshObserver();
+    requestAnimationFrame(attachObserver);
   });
 });
