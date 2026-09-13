@@ -10,29 +10,71 @@ export default class LibertyCategoryBoxes extends Component {
   @service site;
 
   get currentRouteName() {
-    return this.router.currentRouteName ?? "";
+    return (
+      this.router.currentRouteName ||
+      this.router.currentRoute?.name ||
+      ""
+    );
+  }
+
+  get currentUrl() {
+    return this.router.currentURL || window.location.pathname;
   }
 
   get isCategoriesPage() {
+    const pathname = this.currentUrl.split("?")[0];
+
     return (
-      this.currentRouteName === "discovery.index" ||
-      this.currentRouteName === "discovery.categories"
+      pathname === "/categories" ||
+      pathname === "/categories/"
     );
   }
 
   get isCategoryPage() {
+    const pathname = this.currentUrl.split("?")[0];
+
     return (
-      this.currentRouteName === "discovery.category" ||
-      this.currentRouteName === "discovery.subcategories"
+      pathname === "/c" ||
+      pathname.startsWith("/c/")
     );
   }
 
   get currentSlugPath() {
+    const routeSlugPath =
+      this.findRouteSlugPath();
+
+    if (routeSlugPath) {
+      return routeSlugPath;
+    }
+
+    const pathname = this.currentUrl.split("?")[0];
+
+    if (!pathname.startsWith("/c/")) {
+      return null;
+    }
+
+    const pathParts = pathname
+      .replace(/^\/c\//, "")
+      .split("/")
+      .filter(Boolean);
+
+    if (pathParts.length === 0) {
+      return null;
+    }
+
+    return pathParts
+      .filter((part) => !/^\d+$/.test(part))
+      .join("/");
+  }
+
+  findRouteSlugPath() {
     let route = this.router.currentRoute;
 
     while (route) {
       const rawSlugPath =
-        route.params?.category_slug_path_with_id;
+        route.params?.category_slug_path_with_id ||
+        route.params?.category_slug_path ||
+        route.params?.category_slug;
 
       if (
         typeof rawSlugPath === "string" &&
@@ -62,9 +104,9 @@ export default class LibertyCategoryBoxes extends Component {
     return (
       categories.find((category) => {
         return (
-          category.slug === slugPath ||
           category.fullSlug === slugPath ||
-          category.slugPath === slugPath
+          category.slugPath === slugPath ||
+          category.slug === slugPath
         );
       }) ?? null
     );
@@ -77,7 +119,7 @@ export default class LibertyCategoryBoxes extends Component {
   get shouldDisplaySubcategories() {
     return Boolean(
       this.isCategoryPage &&
-        this.currentCategory?.show_subcategory_list &&
+        this.currentCategory &&
         this.subcategories.length > 0
     );
   }
@@ -106,26 +148,18 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
-    const escapedUrl = url.replace(/"/g, '\\"');
+    const escapedUrl = url
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"');
 
     return `--liberty-category-background: url("${escapedUrl}")`;
   }
 
   <template>
-    {{!--
-      /categories and the site homepage category route:
-      render the complete custom category list below the site header.
-    --}}
     {{#if this.isCategoriesPage}}
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
-
-    {{!--
-      /c/... and subcategory routes:
-      render the current category header and its subcategories
-      below the site header.
-    --}}
     {{else if this.shouldDisplaySubcategories}}
       <div
         class="liberty-category-area"
