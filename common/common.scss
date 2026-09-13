@@ -382,7 +382,7 @@
 /* Hide the original category boxes that live inside #main-outlet */
 #main-outlet .category-boxes-container,
 #main-outlet .custom-category-boxes-container {
-  /*display: none !important;*/
+  display: none !important;
 }
 
 .below-site-header-outlet {
