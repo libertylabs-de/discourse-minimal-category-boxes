@@ -18,42 +18,43 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get currentUrl() {
-    return this.router.currentURL || window.location.pathname;
+    return (
+      this.router.currentURL ||
+      window.location.pathname ||
+      ""
+    );
+  }
+
+  get pathname() {
+    return this.currentUrl.split("?")[0];
   }
 
   get isCategoriesPage() {
-    const pathname = this.currentUrl.split("?")[0];
-
     return (
-      pathname === "/categories" ||
-      pathname === "/categories/"
+      this.pathname === "/categories" ||
+      this.pathname === "/categories/"
     );
   }
 
   get isCategoryPage() {
-    const pathname = this.currentUrl.split("?")[0];
-
     return (
-      pathname === "/c" ||
-      pathname.startsWith("/c/")
+      this.pathname === "/c" ||
+      this.pathname.startsWith("/c/")
     );
   }
 
   get currentSlugPath() {
-    const routeSlugPath =
-      this.findRouteSlugPath();
+    const routeSlugPath = this.findRouteSlugPath();
 
     if (routeSlugPath) {
       return routeSlugPath;
     }
 
-    const pathname = this.currentUrl.split("?")[0];
-
-    if (!pathname.startsWith("/c/")) {
+    if (!this.isCategoryPage) {
       return null;
     }
 
-    const pathParts = pathname
+    const pathParts = this.pathname
       .replace(/^\/c\//, "")
       .split("/")
       .filter(Boolean);
@@ -116,10 +117,17 @@ export default class LibertyCategoryBoxes extends Component {
     return this.currentCategory?.subcategories ?? [];
   }
 
-  get shouldDisplaySubcategories() {
+  get shouldDisplayHeader() {
     return Boolean(
       this.isCategoryPage &&
-        this.currentCategory &&
+        this.currentCategory
+    );
+  }
+
+  get shouldDisplaySubcategories() {
+    return Boolean(
+      this.shouldDisplayHeader &&
+        this.currentCategory.show_subcategory_list &&
         this.subcategories.length > 0
     );
   }
@@ -160,7 +168,7 @@ export default class LibertyCategoryBoxes extends Component {
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
-    {{else if this.shouldDisplaySubcategories}}
+    {{else if this.shouldDisplayHeader}}
       <div
         class="liberty-category-area"
         style={{this.categoryBackgroundStyle}}
@@ -170,11 +178,13 @@ export default class LibertyCategoryBoxes extends Component {
             @category={{this.currentCategory}}
           />
 
-          <div class="custom-category-boxes-container">
-            <CategoryBoxes
-              @categories={{this.subcategories}}
-            />
-          </div>
+          {{#if this.shouldDisplaySubcategories}}
+            <div class="custom-category-boxes-container">
+              <CategoryBoxes
+                @categories={{this.subcategories}}
+              />
+            </div>
+          {{/if}}
         </div>
       </div>
     {{/if}}
