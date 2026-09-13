@@ -1,5 +1,5 @@
 @use "lib/viewport";
-#main-outlet > .category-headling {
+#main-outlet > .category-headling, #main-outlet > .category-heading.--has-logo {
   display: none !important;
 }
 .custom-category-header {
