@@ -1,61 +1,168 @@
-import { apiInitializer } from "discourse/lib/api";
-import LibertyCategoryBoxes from "../components/liberty-category-boxes";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 
-export default apiInitializer((api) => {
-  api.renderInOutlet(
-    "below-site-header",
-    LibertyCategoryBoxes
-  );
+import CategoryBoxes from "./category-boxes";
+import CustomCategoryBoxes from "./custom-category-boxes";
+import LibertyCategoryHeader from "./liberty-category-header";
 
-  if (typeof ResizeObserver === "undefined") {
-    return;
+export default class LibertyCategoryBoxes extends Component {
+  @service router;
+  @service site;
+
+  get currentUrl() {
+    return (
+      this.router.currentURL ||
+      window.location.pathname ||
+      ""
+    );
   }
 
-  let observer = null;
-  let attached = false;
+  get pathname() {
+    return this.currentUrl.split("?")[0];
+  }
 
-  const applyWidth = ([entry]) => {
-    if (!entry) {
-      return;
-    }
-
-    document.documentElement.style.setProperty(
-      "--main-outer-width",
-      `${Math.round(entry.contentRect.width)}px`
+  get isCategoriesPage() {
+    return (
+      this.pathname === "/categories" ||
+      this.pathname === "/categories/"
     );
-  };
+  }
 
-  const attachObserver = () => {
-    if (attached) {
-      return;
-    }
-
-    const mainOutlet = document.getElementById(
-      "main-outlet-wrapper"
+  get isCategoryPage() {
+    return (
+      this.pathname === "/c" ||
+      this.pathname.startsWith("/c/")
     );
+  }
 
-    if (!mainOutlet) {
-      return;
+  get currentSlugPath() {
+    if (!this.isCategoryPage) {
+      return null;
     }
 
-    observer = new ResizeObserver(applyWidth);
-    observer.observe(mainOutlet);
-    attached = true;
-  };
+    const pathParts = this.pathname
+      .replace(/^\/c\//, "")
+      .split("/")
+      .filter(Boolean);
 
-  const refreshObserver = () => {
-    observer?.disconnect();
-    observer = null;
-    attached = false;
+    return pathParts
+      .filter((part) => !/^\d+$/.test(part))
+      .join("/");
+  }
 
-    requestAnimationFrame(() => {
-      attachObserver();
-    });
-  };
+  get currentCategory() {
+    const slugPath = this.currentSlugPath;
 
-  attachObserver();
+    if (!slugPath) {
+      return null;
+    }
 
-  api.onPageChange(() => {
-    refreshObserver();
-  });
-});
+    return this.findCategory(
+      this.site.categories ?? [],
+      slugPath
+    );
+  }
+
+  findCategory(categories, slugPath) {
+    for (const category of categories) {
+      const categoryPath =
+        category.fullSlug ||
+        category.slugPath ||
+        category.slug;
+
+      if (
+        categoryPath === slugPath ||
+        category.slug === slugPath
+      ) {
+        return category;
+      }
+
+      const nestedCategory = this.findCategory(
+        category.subcategories ?? [],
+        slugPath
+      );
+
+      if (nestedCategory) {
+        return nestedCategory;
+      }
+    }
+
+    return null;
+  }
+
+  get subcategories() {
+    return this.currentCategory?.subcategories ?? [];
+  }
+
+  get shouldDisplayHeader() {
+    return Boolean(
+      this.isCategoryPage &&
+        this.currentCategory
+    );
+  }
+
+  get shouldDisplaySubcategories() {
+    return Boolean(
+      this.currentCategory?.show_subcategory_list &&
+        this.subcategories.length > 0
+    );
+  }
+
+  get globalOutletArgs() {
+    return {
+      categories: this.site.categories ?? [],
+    };
+  }
+
+  get categoryBackgroundUrl() {
+    const category = this.currentCategory;
+
+    return (
+      category?.uploaded_background?.url ||
+      category?.uploaded_background ||
+      category?.background_url ||
+      null
+    );
+  }
+
+  get categoryBackgroundStyle() {
+    const url = this.categoryBackgroundUrl;
+
+    if (!url) {
+      return null;
+    }
+
+    const escapedUrl = url
+      .replace(/\\/g, "\\\\")
+      .replace(/"/g, '\\"');
+
+    return `--liberty-category-background: url("${escapedUrl}")`;
+  }
+
+  <template>
+    {{#if this.isCategoriesPage}}
+      <CustomCategoryBoxes
+        @outletArgs={{this.globalOutletArgs}}
+      />
+    {{else if this.shouldDisplayHeader}}
+      <div
+        class="liberty-category-area"
+        style={{this.categoryBackgroundStyle}}
+      >
+        <div class="liberty-category-content">
+          <LibertyCategoryHeader
+            @category={{this.currentCategory}}
+          />
+
+          {{#if this.shouldDisplaySubcategories}}
+            <div class="custom-category-boxes-container">
+              <CategoryBoxes
+                @categories={{this.subcategories}}
+              />
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    {{/if}}
+  </template>
+}
