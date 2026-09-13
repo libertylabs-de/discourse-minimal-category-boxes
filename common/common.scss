@@ -1,6 +1,6 @@
 @use "lib/viewport";
-#main-outlet > .category headling {
-  display: none;
+#main-outlet > .category-headling {
+  display: none !important;
 }
 .custom-category-header {
   max-width: calc(var(--d-sidebar-width) + var(--d-max-width));
@@ -274,7 +274,7 @@
 
   .category-box-heading {
     margin-bottom: 0px;
-    font-size: 1.25em;
+    font-size: 1.15em;
   }
 
   .description {
