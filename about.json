@@ -1,7 +1,7 @@
 {
-  "name": "Modern Category + Group Boxes (Above Main)",
+  "name": "Liberty Category Boxes",
   "component": true,
   "authors": "Liberty Labs",
-  "theme_version": "1.0.6",
+  "theme_version": "1.2.2",
   "minimum_discourse_version": "3.0.0"
 }
