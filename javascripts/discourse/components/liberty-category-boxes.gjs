@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+
 import CategoryBoxes from "./category-boxes";
 import CustomCategoryBoxes from "./custom-category-boxes";
 import LibertyCategoryHeader from "./liberty-category-header";
@@ -20,7 +21,10 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get isCategoryPage() {
-    return this.currentRouteName === "discovery.category";
+    return (
+      this.currentRouteName === "discovery.category" ||
+      this.currentRouteName === "discovery.subcategories"
+    );
   }
 
   get currentSlugPath() {
@@ -53,8 +57,10 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
+    const categories = this.site.categories ?? [];
+
     return (
-      (this.site.categories ?? []).find((category) => {
+      categories.find((category) => {
         return (
           category.slug === slugPath ||
           category.fullSlug === slugPath ||
@@ -66,6 +72,20 @@ export default class LibertyCategoryBoxes extends Component {
 
   get subcategories() {
     return this.currentCategory?.subcategories ?? [];
+  }
+
+  get shouldDisplaySubcategories() {
+    return Boolean(
+      this.isCategoryPage &&
+        this.currentCategory?.show_subcategory_list &&
+        this.subcategories.length > 0
+    );
+  }
+
+  get globalOutletArgs() {
+    return {
+      categories: this.site.categories ?? [],
+    };
   }
 
   get categoryBackgroundUrl() {
@@ -86,28 +106,26 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
-    return `--liberty-category-background: url("${url}")`;
-  }
+    const escapedUrl = url.replace(/"/g, '\\"');
 
-  get shouldDisplaySubcategories() {
-    return Boolean(
-      this.isCategoryPage &&
-        this.currentCategory?.show_subcategory_list &&
-        this.subcategories.length > 0
-    );
-  }
-
-  get globalOutletArgs() {
-    return {
-      categories: this.site.categories ?? [],
-    };
+    return `--liberty-category-background: url("${escapedUrl}")`;
   }
 
   <template>
+    {{!--
+      /categories and the site homepage category route:
+      render the complete custom category list below the site header.
+    --}}
     {{#if this.isCategoriesPage}}
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
+
+    {{!--
+      /c/... and subcategory routes:
+      render the current category header and its subcategories
+      below the site header.
+    --}}
     {{else if this.shouldDisplaySubcategories}}
       <div
         class="liberty-category-area"
