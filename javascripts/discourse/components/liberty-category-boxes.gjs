@@ -78,11 +78,8 @@ export default class LibertyCategoryBoxes extends Component {
     }
 
     for (const category of categories ?? []) {
-      const categoryPath =
-        this.getCategoryPath(category);
-
       if (
-        categoryPath === slugPath ||
+        this.getCategoryPath(category) === slugPath ||
         category?.slug === slugPath
       ) {
         return category;
