@@ -9,8 +9,8 @@ export default class LibertyCategoryHeader extends Component {
   @service router;
 
   category = null;
-  categoryLoaded = false;
   categoryLoading = false;
+  categoryIdLoaded = null;
 
   constructor(owner, args) {
     super(owner, args);
@@ -58,25 +58,27 @@ export default class LibertyCategoryHeader extends Component {
 
     if (
       !id ||
-      this.categoryLoaded ||
-      this.categoryLoading
+      this.categoryLoading ||
+      this.categoryIdLoaded === id
     ) {
       return;
     }
 
     this.categoryLoading = true;
+    this.categoryIdLoaded = id;
 
     try {
       const response = await ajax(
-        `/c/${id}.json`
+        `/c/${id}/show.json`
       );
 
       this.category =
         response.category ||
         response;
-
-      this.categoryLoaded = true;
     } catch (error) {
+      this.category = null;
+      this.categoryIdLoaded = null;
+
       console.error(
         "[LibertyCategoryHeader] Failed to load category:",
         error
