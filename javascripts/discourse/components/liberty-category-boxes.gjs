@@ -9,14 +9,6 @@ export default class LibertyCategoryBoxes extends Component {
   @service router;
   @service site;
 
-  get currentRouteName() {
-    return (
-      this.router.currentRouteName ||
-      this.router.currentRoute?.name ||
-      ""
-    );
-  }
-
   get currentUrl() {
     return (
       this.router.currentURL ||
@@ -48,18 +40,12 @@ export default class LibertyCategoryBoxes extends Component {
       return null;
     }
 
-    const pathParts = this.pathname
+    return this.pathname
       .replace(/^\/c\//, "")
       .split("/")
-      .filter(Boolean);
-
-    return pathParts
+      .filter(Boolean)
       .filter((part) => !/^\d+$/.test(part))
       .join("/");
-  }
-
-  get categoryTree() {
-    return this.site.categories ?? [];
   }
 
   getCategoryChildren(category) {
@@ -70,7 +56,7 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
-  getCategorySlugPath(category) {
+  getCategoryPath(category) {
     return (
       category?.full_slug ||
       category?.fullSlug ||
@@ -83,13 +69,7 @@ export default class LibertyCategoryBoxes extends Component {
 
   findCategory(categories, slugPath) {
     for (const category of categories ?? []) {
-      const categoryPath =
-        this.getCategorySlugPath(category);
-
-      if (
-        categoryPath === slugPath ||
-        category?.slug === slugPath
-      ) {
+      if (this.getCategoryPath(category) === slugPath) {
         return category;
       }
 
@@ -107,15 +87,9 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get currentCategory() {
-    const slugPath = this.currentSlugPath;
-
-    if (!slugPath) {
-      return null;
-    }
-
     return this.findCategory(
-      this.categoryTree,
-      slugPath
+      this.site.categories ?? [],
+      this.currentSlugPath
     );
   }
 
@@ -125,24 +99,16 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
-  get shouldDisplayHeader() {
-    return Boolean(
-      this.isCategoryPage &&
-        this.currentCategory
-    );
-  }
-
   get shouldDisplaySubcategories() {
     return Boolean(
-      this.shouldDisplayHeader &&
-        this.currentCategory?.show_subcategory_list &&
+      this.currentCategory?.show_subcategory_list &&
         this.subcategories.length > 0
     );
   }
 
   get globalOutletArgs() {
     return {
-      categories: this.categoryTree,
+      categories: this.site.categories ?? [],
     };
   }
 
@@ -153,7 +119,6 @@ export default class LibertyCategoryBoxes extends Component {
       category?.uploaded_background?.url ||
       category?.uploaded_background ||
       category?.background_url ||
-      category?.background ||
       null
     );
   }
@@ -177,12 +142,24 @@ export default class LibertyCategoryBoxes extends Component {
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
-    {{else if this.shouldDisplayHeader}}
+    {{else if this.isCategoryPage}}
       <div
         class="liberty-category-area"
         style={{this.categoryBackgroundStyle}}
       >
         <div class="liberty-category-content">
+          <div
+            style="
+              background: yellow;
+              color: black;
+              padding: 1rem;
+            "
+          >
+            LibertyCategoryBoxes is rendering.
+            URL: {{this.pathname}}
+            SLUG: {{this.currentSlugPath}}
+          </div>
+
           <LibertyCategoryHeader />
 
           {{#if this.shouldDisplaySubcategories}}
