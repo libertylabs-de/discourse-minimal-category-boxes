@@ -1,13 +1,49 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 
 import CategoryLogo from "discourse/components/category-logo";
 import CategoryTitleBefore from "discourse/components/category-title-before";
 
 export default class LibertyCategoryHeader extends Component {
   @service router;
-  @service site;
-  @service store;
+
+  categories = [];
+  categoriesLoaded = false;
+  categoriesLoading = false;
+
+  constructor(owner, args) {
+    super(owner, args);
+
+    this.loadCategories();
+  }
+
+  async loadCategories() {
+    if (
+      this.categoriesLoaded ||
+      this.categoriesLoading
+    ) {
+      return;
+    }
+
+    this.categoriesLoading = true;
+
+    try {
+      const response = await ajax(
+        "/categories.json?include_subcategories=true"
+      );
+
+      this.categories = response.categories ?? [];
+      this.categoriesLoaded = true;
+    } catch (error) {
+      console.error(
+        "[LibertyCategoryHeader] Failed to load categories:",
+        error
+      );
+    } finally {
+      this.categoriesLoading = false;
+    }
+  }
 
   get currentUrl() {
     return (
@@ -45,6 +81,7 @@ export default class LibertyCategoryHeader extends Component {
     return (
       category?.subcategory_list ??
       category?.subcategories ??
+      category?.subcategoryList ??
       []
     );
   }
@@ -61,6 +98,10 @@ export default class LibertyCategoryHeader extends Component {
   }
 
   findCategory(categories, slugPath) {
+    if (!slugPath) {
+      return null;
+    }
+
     for (const category of categories ?? []) {
       const categoryPath =
         this.getCategoryPath(category);
@@ -85,13 +126,9 @@ export default class LibertyCategoryHeader extends Component {
     return null;
   }
 
-  get categoryTree() {
-    return this.site.categories ?? [];
-  }
-
   get category() {
     return this.findCategory(
-      this.categoryTree,
+      this.categories,
       this.currentSlugPath
     );
   }
