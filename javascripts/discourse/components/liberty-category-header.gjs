@@ -8,41 +8,14 @@ import CategoryTitleBefore from "discourse/components/category-title-before";
 export default class LibertyCategoryHeader extends Component {
   @service router;
 
-  categories = [];
-  categoriesLoaded = false;
-  categoriesLoading = false;
+  category = null;
+  categoryLoaded = false;
+  categoryLoading = false;
 
   constructor(owner, args) {
     super(owner, args);
 
-    this.loadCategories();
-  }
-
-  async loadCategories() {
-    if (
-      this.categoriesLoaded ||
-      this.categoriesLoading
-    ) {
-      return;
-    }
-
-    this.categoriesLoading = true;
-
-    try {
-      const response = await ajax(
-        "/categories.json?include_subcategories=true"
-      );
-
-      this.categories = response.categories ?? [];
-      this.categoriesLoaded = true;
-    } catch (error) {
-      console.error(
-        "[LibertyCategoryHeader] Failed to load categories:",
-        error
-      );
-    } finally {
-      this.categoriesLoading = false;
-    }
+    this.loadCurrentCategory();
   }
 
   get currentUrl() {
@@ -64,73 +37,53 @@ export default class LibertyCategoryHeader extends Component {
     );
   }
 
-  get currentSlugPath() {
+  get categoryId() {
     if (!this.isCategoryPage) {
       return null;
     }
 
-    return this.pathname
-      .replace(/^\/c\//, "")
+    const parts = this.pathname
       .split("/")
-      .filter(Boolean)
-      .filter((part) => !/^\d+$/.test(part))
-      .join("/");
+      .filter(Boolean);
+
+    const lastPart = parts.at(-1);
+
+    return /^\d+$/.test(lastPart)
+      ? lastPart
+      : null;
   }
 
-  getCategoryChildren(category) {
-    return (
-      category?.subcategory_list ??
-      category?.subcategories ??
-      category?.subcategoryList ??
-      []
-    );
-  }
+  async loadCurrentCategory() {
+    const id = this.categoryId;
 
-  getCategoryPath(category) {
-    return (
-      category?.full_slug ||
-      category?.fullSlug ||
-      category?.slug_path ||
-      category?.slugPath ||
-      category?.slug ||
-      ""
-    );
-  }
-
-  findCategory(categories, slugPath) {
-    if (!slugPath) {
-      return null;
+    if (
+      !id ||
+      this.categoryLoaded ||
+      this.categoryLoading
+    ) {
+      return;
     }
 
-    for (const category of categories ?? []) {
-      const categoryPath =
-        this.getCategoryPath(category);
+    this.categoryLoading = true;
 
-      if (
-        categoryPath === slugPath ||
-        category?.slug === slugPath
-      ) {
-        return category;
-      }
-
-      const nestedCategory = this.findCategory(
-        this.getCategoryChildren(category),
-        slugPath
+    try {
+      const response = await ajax(
+        `/c/${id}.json`
       );
 
-      if (nestedCategory) {
-        return nestedCategory;
-      }
+      this.category =
+        response.category ||
+        response;
+
+      this.categoryLoaded = true;
+    } catch (error) {
+      console.error(
+        "[LibertyCategoryHeader] Failed to load category:",
+        error
+      );
+    } finally {
+      this.categoryLoading = false;
     }
-
-    return null;
-  }
-
-  get category() {
-    return this.findCategory(
-      this.categories,
-      this.currentSlugPath
-    );
   }
 
   get shouldDisplay() {
