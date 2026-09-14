@@ -143,34 +143,22 @@ export default class LibertyCategoryBoxes extends Component {
         @outletArgs={{this.globalOutletArgs}}
       />
     {{else if this.isCategoryPage}}
-      <div
-        class="liberty-category-area"
-        style={{this.categoryBackgroundStyle}}
-      >
-        <div class="liberty-category-content">
-          <div
-            style="
-              background: yellow;
-              color: black;
-              padding: 1rem;
-            "
-          >
-            LibertyCategoryBoxes is rendering.
-            URL: {{this.pathname}}
-            SLUG: {{this.currentSlugPath}}
-          </div>
+  <div
+    class="liberty-category-area"
+    style={{this.categoryBackgroundStyle}}
+  >
+    <div class="liberty-category-content">
+      <LibertyCategoryHeader />
 
-          <LibertyCategoryHeader />
-
-          {{#if this.shouldDisplaySubcategories}}
-            <div class="custom-category-boxes-container">
-              <CategoryBoxes
-                @categories={{this.subcategories}}
-              />
-            </div>
-          {{/if}}
+      {{#if this.shouldDisplaySubcategories}}
+        <div class="custom-category-boxes-container">
+          <CategoryBoxes
+            @categories={{this.subcategories}}
+          />
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
+  </div>
+{{/if}}
   </template>
 }
