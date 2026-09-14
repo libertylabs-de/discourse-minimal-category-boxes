@@ -40,22 +40,40 @@ export default class LibertyCategoryHeader extends Component {
       .join("/");
   }
 
-  findCategory(categories, slugPath) {
-    for (const category of categories ?? []) {
-      const categorySlugPath =
-        category.fullSlug ||
-        category.slugPath ||
-        category.slug;
+  getCategoryChildren(category) {
+    return (
+      category?.subcategory_list ??
+      category?.subcategories ??
+      []
+    );
+  }
 
-      if (
-        categorySlugPath === slugPath ||
-        category.slug === slugPath
-      ) {
+  getCategoryPath(category) {
+    return (
+      category?.full_slug ||
+      category?.fullSlug ||
+      category?.slug_path ||
+      category?.slugPath ||
+      category?.slug ||
+      ""
+    );
+  }
+
+  findCategory(categories, slugPath) {
+    if (!slugPath) {
+      return null;
+    }
+
+    for (const category of categories ?? []) {
+      const categoryPath =
+        this.getCategoryPath(category);
+
+      if (categoryPath === slugPath) {
         return category;
       }
 
       const nestedCategory = this.findCategory(
-        category.subcategories,
+        this.getCategoryChildren(category),
         slugPath
       );
 
