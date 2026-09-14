@@ -9,14 +9,6 @@ export default class LibertyCategoryBoxes extends Component {
   @service router;
   @service site;
 
-  get currentRouteName() {
-    return (
-      this.router.currentRouteName ||
-      this.router.currentRoute?.name ||
-      ""
-    );
-  }
-
   get currentUrl() {
     return (
       this.router.currentURL ||
@@ -44,76 +36,18 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   get currentSlugPath() {
-    const routeSlugPath = this.findRouteSlugPath();
-
-    if (routeSlugPath) {
-      return routeSlugPath;
-    }
-
     if (!this.isCategoryPage) {
       return null;
     }
 
-    const parts = this.pathname
+    const pathParts = this.pathname
       .replace(/^\/c\//, "")
       .split("/")
       .filter(Boolean);
 
-    if (parts.length === 0) {
-      return null;
-    }
-
-    return parts
+    return pathParts
       .filter((part) => !/^\d+$/.test(part))
       .join("/");
-  }
-
-  findRouteSlugPath() {
-    let route = this.router.currentRoute;
-
-    while (route) {
-      const rawSlugPath =
-        route.params?.category_slug_path_with_id ||
-        route.params?.category_slug_path ||
-        route.params?.category_slug;
-
-      if (
-        typeof rawSlugPath === "string" &&
-        rawSlugPath.length > 0
-      ) {
-        return rawSlugPath
-          .split("/")
-          .filter((part) => !/^\d+$/.test(part))
-          .join("/");
-      }
-
-      route = route.parent;
-    }
-
-    return null;
-  }
-
-  findCategory(categories, slugPath) {
-    for (const category of categories ?? []) {
-      if (
-        category.fullSlug === slugPath ||
-        category.slugPath === slugPath ||
-        category.slug === slugPath
-      ) {
-        return category;
-      }
-
-      const nestedCategory = this.findCategory(
-        category.subcategories,
-        slugPath
-      );
-
-      if (nestedCategory) {
-        return nestedCategory;
-      }
-    }
-
-    return null;
   }
 
   get currentCategory() {
@@ -129,6 +63,33 @@ export default class LibertyCategoryBoxes extends Component {
     );
   }
 
+  findCategory(categories, slugPath) {
+    for (const category of categories) {
+      const categoryPath =
+        category.fullSlug ||
+        category.slugPath ||
+        category.slug;
+
+      if (
+        categoryPath === slugPath ||
+        category.slug === slugPath
+      ) {
+        return category;
+      }
+
+      const nestedCategory = this.findCategory(
+        category.subcategories ?? [],
+        slugPath
+      );
+
+      if (nestedCategory) {
+        return nestedCategory;
+      }
+    }
+
+    return null;
+  }
+
   get subcategories() {
     return this.currentCategory?.subcategories ?? [];
   }
@@ -142,8 +103,7 @@ export default class LibertyCategoryBoxes extends Component {
 
   get shouldDisplaySubcategories() {
     return Boolean(
-      this.shouldDisplayHeader &&
-        this.currentCategory.show_subcategory_list &&
+      this.currentCategory?.show_subcategory_list &&
         this.subcategories.length > 0
     );
   }
