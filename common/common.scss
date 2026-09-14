@@ -221,7 +221,7 @@
           width: 90%;
 
         }
-      .category-logo:after {
+      .category-logo::before {
         background: rgba(var(--primary-rgb), 0.1);
         }
         .category-abbreviation {
