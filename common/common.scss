@@ -214,8 +214,17 @@
         justify-content: center;
         align-items: center;
         border-radius: 0.85em;
+        
         /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
-
+        /* Semi-transparent overlay above the category color */
+      .category-logo::before {
+          position: absolute;
+          z-index: 1;
+          inset: 0;
+          background-color: rgb(var(--primary-rgb), 0.2);
+          pointer-events: none;
+          content: "";
+        }
         img {
           height: 90%;
           width: 90%;
