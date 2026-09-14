@@ -48,10 +48,15 @@ export default class LibertyCategoryBoxes extends Component {
       .join("/");
   }
 
+  get categoryTree() {
+    return this.site.categories ?? [];
+  }
+
   getCategoryChildren(category) {
     return (
       category?.subcategory_list ??
       category?.subcategories ??
+      category?.subcategoryList ??
       []
     );
   }
@@ -68,8 +73,18 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   findCategory(categories, slugPath) {
+    if (!slugPath) {
+      return null;
+    }
+
     for (const category of categories ?? []) {
-      if (this.getCategoryPath(category) === slugPath) {
+      const categoryPath =
+        this.getCategoryPath(category);
+
+      if (
+        categoryPath === slugPath ||
+        category?.slug === slugPath
+      ) {
         return category;
       }
 
@@ -88,7 +103,7 @@ export default class LibertyCategoryBoxes extends Component {
 
   get currentCategory() {
     return this.findCategory(
-      this.site.categories ?? [],
+      this.categoryTree,
       this.currentSlugPath
     );
   }
@@ -108,7 +123,7 @@ export default class LibertyCategoryBoxes extends Component {
 
   get globalOutletArgs() {
     return {
-      categories: this.site.categories ?? [],
+      categories: this.categoryTree,
     };
   }
 
@@ -119,6 +134,7 @@ export default class LibertyCategoryBoxes extends Component {
       category?.uploaded_background?.url ||
       category?.uploaded_background ||
       category?.background_url ||
+      category?.background ||
       null
     );
   }
@@ -143,22 +159,22 @@ export default class LibertyCategoryBoxes extends Component {
         @outletArgs={{this.globalOutletArgs}}
       />
     {{else if this.isCategoryPage}}
-  <div
-    class="liberty-category-area"
-    style={{this.categoryBackgroundStyle}}
-  >
-    <div class="liberty-category-content">
-      <LibertyCategoryHeader />
+      <div
+        class="liberty-category-area"
+        style={{this.categoryBackgroundStyle}}
+      >
+        <div class="liberty-category-content">
+          <LibertyCategoryHeader />
 
-      {{#if this.shouldDisplaySubcategories}}
-        <div class="custom-category-boxes-container">
-          <CategoryBoxes
-            @categories={{this.subcategories}}
-          />
+          {{#if this.shouldDisplaySubcategories}}
+            <div class="custom-category-boxes-container">
+              <CategoryBoxes
+                @categories={{this.subcategories}}
+              />
+            </div>
+          {{/if}}
         </div>
-      {{/if}}
-    </div>
-  </div>
-{{/if}}
+      </div>
+    {{/if}}
   </template>
 }
