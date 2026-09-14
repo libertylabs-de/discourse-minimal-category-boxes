@@ -7,6 +7,7 @@ import CategoryTitleBefore from "discourse/components/category-title-before";
 export default class LibertyCategoryHeader extends Component {
   @service router;
   @service site;
+  @service store;
 
   get currentUrl() {
     return (
@@ -60,15 +61,14 @@ export default class LibertyCategoryHeader extends Component {
   }
 
   findCategory(categories, slugPath) {
-    if (!slugPath) {
-      return null;
-    }
-
     for (const category of categories ?? []) {
       const categoryPath =
         this.getCategoryPath(category);
 
-      if (categoryPath === slugPath) {
+      if (
+        categoryPath === slugPath ||
+        category?.slug === slugPath
+      ) {
         return category;
       }
 
@@ -85,9 +85,13 @@ export default class LibertyCategoryHeader extends Component {
     return null;
   }
 
+  get categoryTree() {
+    return this.site.categories ?? [];
+  }
+
   get category() {
     return this.findCategory(
-      this.site.categories ?? [],
+      this.categoryTree,
       this.currentSlugPath
     );
   }
@@ -108,18 +112,29 @@ export default class LibertyCategoryHeader extends Component {
   }
 
   <template>
-  <div
-    class="liberty-category-header-inner"
-    style="
-      background: orange;
-      color: black;
-      min-height: 80px;
-      padding: 1rem;
-    "
-  >
-    Header component loaded.
-    Slug: {{this.currentSlugPath}}
-    Category: {{this.category.name}}
-  </div>
-</template>
+    {{#if this.shouldDisplay}}
+      <div class="liberty-category-header-inner">
+        <div class="liberty-category-header-title">
+          <h1>
+            <CategoryTitleBefore
+              @category={{this.category}}
+            />
+            {{this.category.name}}
+          </h1>
+
+          {{#if this.category.description_excerpt}}
+            <p>
+              {{this.category.description_excerpt}}
+            </p>
+          {{/if}}
+        </div>
+
+        {{#if this.categoryLogoUrl}}
+          <CategoryLogo
+            @category={{this.category}}
+          />
+        {{/if}}
+      </div>
+    {{/if}}
+  </template>
 }
