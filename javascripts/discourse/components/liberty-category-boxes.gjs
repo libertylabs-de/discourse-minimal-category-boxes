@@ -9,6 +9,14 @@ export default class LibertyCategoryBoxes extends Component {
   @service router;
   @service site;
 
+  get currentRouteName() {
+    return (
+      this.router.currentRouteName ||
+      this.router.currentRoute?.name ||
+      ""
+    );
+  }
+
   get currentUrl() {
     return (
       this.router.currentURL ||
@@ -50,35 +58,43 @@ export default class LibertyCategoryBoxes extends Component {
       .join("/");
   }
 
-  get currentCategory() {
-    const slugPath = this.currentSlugPath;
+  get categoryTree() {
+    return this.site.categories ?? [];
+  }
 
-    if (!slugPath) {
-      return null;
-    }
+  getCategoryChildren(category) {
+    return (
+      category?.subcategory_list ??
+      category?.subcategories ??
+      []
+    );
+  }
 
-    return this.findCategory(
-      this.site.categories ?? [],
-      slugPath
+  getCategorySlugPath(category) {
+    return (
+      category?.full_slug ||
+      category?.fullSlug ||
+      category?.slug_path ||
+      category?.slugPath ||
+      category?.slug ||
+      ""
     );
   }
 
   findCategory(categories, slugPath) {
-    for (const category of categories) {
+    for (const category of categories ?? []) {
       const categoryPath =
-        category.fullSlug ||
-        category.slugPath ||
-        category.slug;
+        this.getCategorySlugPath(category);
 
       if (
         categoryPath === slugPath ||
-        category.slug === slugPath
+        category?.slug === slugPath
       ) {
         return category;
       }
 
       const nestedCategory = this.findCategory(
-        category.subcategories ?? [],
+        this.getCategoryChildren(category),
         slugPath
       );
 
@@ -90,8 +106,23 @@ export default class LibertyCategoryBoxes extends Component {
     return null;
   }
 
+  get currentCategory() {
+    const slugPath = this.currentSlugPath;
+
+    if (!slugPath) {
+      return null;
+    }
+
+    return this.findCategory(
+      this.categoryTree,
+      slugPath
+    );
+  }
+
   get subcategories() {
-    return this.currentCategory?.subcategories ?? [];
+    return this.getCategoryChildren(
+      this.currentCategory
+    );
   }
 
   get shouldDisplayHeader() {
@@ -103,14 +134,15 @@ export default class LibertyCategoryBoxes extends Component {
 
   get shouldDisplaySubcategories() {
     return Boolean(
-      this.currentCategory?.show_subcategory_list &&
+      this.shouldDisplayHeader &&
+        this.currentCategory?.show_subcategory_list &&
         this.subcategories.length > 0
     );
   }
 
   get globalOutletArgs() {
     return {
-      categories: this.site.categories ?? [],
+      categories: this.categoryTree,
     };
   }
 
@@ -121,6 +153,7 @@ export default class LibertyCategoryBoxes extends Component {
       category?.uploaded_background?.url ||
       category?.uploaded_background ||
       category?.background_url ||
+      category?.background ||
       null
     );
   }
@@ -150,9 +183,7 @@ export default class LibertyCategoryBoxes extends Component {
         style={{this.categoryBackgroundStyle}}
       >
         <div class="liberty-category-content">
-          <LibertyCategoryHeader
-            @category={{this.currentCategory}}
-          />
+          <LibertyCategoryHeader />
 
           {{#if this.shouldDisplaySubcategories}}
             <div class="custom-category-boxes-container">
