@@ -2,14 +2,9 @@ import { apiInitializer } from "discourse/lib/api";
 import { registerDestructor } from "@ember/destroyable";
 
 import LibertyCategoryBoxes from "../components/liberty-category-boxes";
-import LibertyCategoryTreeService from "../services/liberty-category-tree";
 
 export default apiInitializer((api) => {
-  api.registerService(
-    "liberty-category-tree",
-    LibertyCategoryTreeService
-  );
-
+  
   api.renderInOutlet(
     "below-site-header",
     LibertyCategoryBoxes
