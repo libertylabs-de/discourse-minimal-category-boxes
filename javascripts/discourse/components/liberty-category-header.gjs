@@ -108,29 +108,18 @@ export default class LibertyCategoryHeader extends Component {
   }
 
   <template>
-    {{#if this.shouldDisplay}}
-      <div class="liberty-category-header-inner">
-        <div class="liberty-category-header-title">
-          <h1>
-            <CategoryTitleBefore
-              @category={{this.category}}
-            />
-            {{this.category.name}}
-          </h1>
-
-          {{#if this.category.description_excerpt}}
-            <p>
-              {{this.category.description_excerpt}}
-            </p>
-          {{/if}}
-        </div>
-
-        {{#if this.categoryLogoUrl}}
-          <CategoryLogo
-            @category={{this.category}}
-          />
-        {{/if}}
-      </div>
-    {{/if}}
-  </template>
+  <div
+    class="liberty-category-header-inner"
+    style="
+      background: orange;
+      color: black;
+      min-height: 80px;
+      padding: 1rem;
+    "
+  >
+    Header component loaded.
+    Slug: {{this.currentSlugPath}}
+    Category: {{this.category.name}}
+  </div>
+</template>
 }
