@@ -217,14 +217,15 @@
         position: relative;
         isolation: isolate;
         overflow: hidden;
+        margin-top: auto;
         
         /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
         /* Semi-transparent overlay above the category color */
       .category-logo::before {
           position: absolute;
-          z-index: 1;
+          z-index: -1;
           inset: 0;
-          background-color: rgb(var(--secondary-rgb), 0.5);
+          background-color: rgb(var(--secondary-rgb), 0.65);
           pointer-events: none;
           content: "";
         }
@@ -240,6 +241,7 @@
       .category-logo .category-abbreviation {
         position: relative;
         z-index: 2;
+        margin: auto;
       }
         .category-abbreviation {
           display: none;
@@ -620,7 +622,7 @@
   margin: 0;
   padding: 0;
   color: var(--primary);
-  font-size: 3em;
+  font-size: 2.65em;
   line-height: 1.2;
   text-align: left;
 }
