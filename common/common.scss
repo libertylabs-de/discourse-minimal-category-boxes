@@ -214,6 +214,9 @@
         justify-content: center;
         align-items: center;
         border-radius: 0.85em;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
         
         /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
         /* Semi-transparent overlay above the category color */
@@ -228,11 +231,16 @@
         img {
           height: 90%;
           width: 90%;
-
+        
         }
-      .category-logo::before {
-        background: rgba(var(--primary-rgb), 0.1);
-        }
+      /* Keep the actual logo image above the overlay */
+      /* Keep the actual logo image above the overlay */
+      .category-logo .aspect-image,
+      .category-logo > img,
+      .category-logo .category-abbreviation {
+        position: relative;
+        z-index: 2;
+      }
         .category-abbreviation {
           display: none;
         }
