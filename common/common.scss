@@ -575,11 +575,20 @@
 .liberty-category-area::before {
   position: fixed;
   z-index: -2;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-image: var(--liberty-category-background);
+  inset: 0;
+  background:
+    linear-gradient(
+      180deg,
+      rgb(var(--quaternary-rgb), 0.82) 0%,
+      rgb(var(--primary-100-rgb), 0.82) 50%,
+      rgb(var(--primary-100-rgb), 0.82) 100%
+    ),
+    linear-gradient(
+      0deg,
+      rgb(var(--secondary-rgb), 0.35) 0%,
+      rgb(var(--secondary-rgb), 0.35) 100%
+    ),
+    var(--liberty-category-background);
   background-position: center top;
   background-repeat: no-repeat;
   background-size: cover;
@@ -598,13 +607,6 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: 
-      linear-gradient(180deg, 
-        var(--quaternary) 0%, 
-        var(--primary-100) 50%, 
-        var(--primary-100) 100%), linear-gradient(0deg, 
-        var(--secondary) 0%, 
-        var(--secondary) 100%);    pointer-events: none;
   content: "";
 }
 
