@@ -187,6 +187,7 @@ export default class CustomCategoryBoxes extends Component {
           {{#if this.firstHeader}}
             <CategoryHeader
               @header={{this.firstHeader}}
+              @className="custom-category-header-first"
             />
           {{/if}}
 
