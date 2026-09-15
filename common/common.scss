@@ -572,6 +572,15 @@
  * constrained below-site-header content. This lets it extend
  * behind the main content and sidebar.
  */
+
+.liberty-category-area {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  margin: 0;
+  isolation: isolate;
+}
+
 .liberty-category-area::before {
   position: fixed;
   z-index: -2;
@@ -579,34 +588,29 @@
   background:
     linear-gradient(
       180deg,
-      rgb(var(--quaternary-rgb), 0.82) 0%,
-      rgb(var(--primary-100-rgb), 0.82) 50%,
-      rgb(var(--primary-100-rgb), 0.82) 100%
+      var(--quaternary) 0%,
+      var(--primary-100) 50%,
+      var(--primary-100) 100%
     ),
     linear-gradient(
       0deg,
-      rgb(var(--secondary-rgb), 0.35) 0%,
-      rgb(var(--secondary-rgb), 0.35) 100%
-    ),
-    var(--liberty-category-background);
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: cover;
+      var(--secondary) 0%,
+      var(--secondary) 100%
+    );
   pointer-events: none;
   content: "";
 }
 
-/*
- * Optional readability overlay above the image but below
- * the category header and boxes.
- */
 .liberty-category-area::after {
   position: fixed;
   z-index: -1;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
+  background-image: var(--liberty-category-background);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 1;
+  pointer-events: none;
   content: "";
 }
 
