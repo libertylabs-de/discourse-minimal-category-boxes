@@ -163,7 +163,7 @@
 .custom-category-boxes:not(.above-discovery-categories-outlet) {
   display: grid;
   grid-auto-flow: row;
-  gap: 32px;
+  gap: var(--d-main-content-gap);
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
   width: 100%;
