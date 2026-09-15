@@ -21,6 +21,13 @@ export default class LibertyCategoryBoxes extends Component {
     return this.currentUrl.split("?")[0];
   }
 
+  get isHomepage() {
+    return (
+      this.pathname === "/" ||
+      this.pathname === ""
+    );
+  }
+
   get isCategoriesPage() {
     return (
       this.pathname === "/categories" ||
@@ -151,10 +158,17 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   <template>
-    {{#if this.isCategoriesPage}}
+    {{!-- Homepage: show the forked custom category boxes. --}}
+    {{#if this.isHomepage}}
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
+
+    {{!-- /categories: intentionally render nothing here. --}}
+    {{else if this.isCategoriesPage}}
+      {{! Native Discourse categories overview remains in main view. }}
+
+    {{!-- /c/...: show category header and optional subcategories. --}}
     {{else if this.isCategoryPage}}
       <div
         class="liberty-category-area"
