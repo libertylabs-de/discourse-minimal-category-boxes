@@ -2,7 +2,9 @@ import { gt } from "discourse/truth-helpers";
 
 const CategoryHeader = <template>
   {{#if (gt @header.length 0)}}
-    <h1 class="custom-category-header">
+    <h1
+      class="custom-category-header {{@className}}"
+    >
       {{@header}}
     </h1>
   {{/if}}
