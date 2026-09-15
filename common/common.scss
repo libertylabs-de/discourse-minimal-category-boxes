@@ -623,12 +623,6 @@
   box-sizing: border-box;
 }
 
-// Manipulate z-index of #main-outlet
-
-#main-outlet-wrapper #main-outlet {
-  z-index: 99
-}
-
 .liberty-category-header-inner,
 .custom-category-boxes-container {
   width: var(--main-outer-width, var(--d-max-width));
