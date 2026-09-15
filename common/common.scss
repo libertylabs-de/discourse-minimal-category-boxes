@@ -575,7 +575,7 @@
 
 .liberty-category-area {
   position: relative;
-  z-index: 0;
+  z-index: -10;
   width: 100%;
   margin: 0;
   isolation: isolate;
@@ -583,7 +583,7 @@
 
 .liberty-category-area::before {
   position: fixed;
-  z-index: -2;
+  z-index: -12;
   inset: 0;
   background:
     linear-gradient(
@@ -603,7 +603,7 @@
 
 .liberty-category-area::after {
   position: fixed;
-  z-index: -1;
+  z-index: -11;
   inset: 0;
   background-image: var(--liberty-category-background);
   background-position: center top;
@@ -616,7 +616,7 @@
 
 .liberty-category-content {
   position: relative;
-  z-index: 1;
+  z-index: -1;
   width: var(--main-outer-width, var(--d-max-width));
   max-width: var(--main-outer-width, var(--d-max-width));
   margin-inline: auto;
