@@ -608,7 +608,7 @@
   background-image: var(--liberty-category-background);
   background-position: center top;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   opacity: 1;
   pointer-events: none;
   content: "";
@@ -621,6 +621,12 @@
   max-width: var(--main-outer-width, var(--d-max-width));
   margin-inline: auto;
   box-sizing: border-box;
+}
+
+// Manipulate z-index of #main-outlet
+
+#main-outlet-wrapper #main-outlet {
+  z-index: 99
 }
 
 .liberty-category-header-inner,
