@@ -75,7 +75,8 @@
   .column.categories,
   .category-list,
   .muted-categories {
-    // Intentionally left visible.
+    /*display: none;
+    visibility: hidden;*/
   }
 }
 
@@ -119,9 +120,9 @@
 
     .group-box-inner {
       display: inline-grid;
+      gap: 1em;
       grid-auto-flow: row;
       grid-template-rows: 1fr 0fr;
-      gap: 1em;
 
       .group-description {
         color: var(--primary-very-high);
@@ -171,9 +172,9 @@
 .custom-category-boxes:not(.above-discovery-categories-outlet) {
   display: grid;
   grid-auto-flow: row;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: 1fr;
   gap: 32px;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
   width: 100%;
 
   .category-box {
@@ -220,6 +221,7 @@
 
       .category-logo {
         position: relative;
+        z-index: 0;
         display: flex;
         flex: 0 0 60px;
         align-items: center;
@@ -231,15 +233,19 @@
         border-radius: 0.85em;
         isolation: isolate;
 
+        /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
+        /* Semi-transparent overlay above the category color */
+
         &::before {
           position: absolute;
-          z-index: 0;
+          z-index: -1;
           inset: 0;
-          background-color: rgb(var(--secondary-rgb) / 70%);
+          background-color: rgb(var(--secondary-rgb), 0.7);
           pointer-events: none;
           content: "";
         }
 
+        /* Keep the actual logo image above the overlay */
         > .aspect-image {
           position: relative;
           z-index: 1;
@@ -250,6 +256,7 @@
           height: 100%;
         }
 
+        /* Center responsive images inside the picture element */
         > .aspect-image > picture {
           display: flex;
           align-items: center;
@@ -258,7 +265,9 @@
           height: 100%;
         }
 
+        /* Support direct images and picture-wrapped images */
         img,
+        > img,
         > .aspect-image > img,
         > .aspect-image > picture > img {
           display: block;
@@ -360,7 +369,7 @@
 // Subcategory theming
 #header-list-area {
   .custom-category-boxes {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr 1fr 1fr;
     margin-top: 32px;
 
     .category-box-inner {
@@ -370,7 +379,18 @@
         width: 60px;
         height: 60px;
         border-radius: 4px;
-        background-color: rgb(var(--tertiary-rgb) / 10%) !important;
+
+        /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
+
+        /* Semi-transparent overlay above the category color */
+        &::before {
+          position: absolute;
+          z-index: -1;
+          inset: 0;
+          background-color: rgb(var(--secondary-rgb), 0.7);
+          pointer-events: none;
+          content: "";
+        }
       }
     }
 
@@ -396,7 +416,7 @@
   body.category,
   #header-list-area {
     .custom-category-boxes {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr 1fr 1fr;
     }
   }
 }
@@ -422,7 +442,7 @@
   }
 }
 
-/* Hide original category boxes inside #main-outlet */
+/* Hide the original category boxes that live inside #main-outlet */
 #main-outlet {
   .category-boxes-container,
   .custom-category-boxes-container {
@@ -450,6 +470,7 @@
     box-sizing: border-box;
   }
 
+  // ── Sidebar open: left-align flush with the content area ─────────────────
   .has-sidebar-page & {
     .custom-category-boxes,
     .custom-category-boxes-container,
@@ -460,6 +481,7 @@
     }
   }
 
+  /* Category boxes rendered outside #main-outlet */
   .custom-category-boxes-container {
     width: var(--main-outer-width, var(--d-max-width));
     max-width: var(--main-outer-width, var(--d-max-width));
@@ -468,8 +490,8 @@
   .custom-category-boxes {
     display: grid;
     grid-auto-flow: row;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     width: 100%;
     margin: 0;
   }
@@ -515,6 +537,7 @@
 
   .custom-category-boxes .category-logo {
     position: relative;
+    z-index: 0;
     display: flex;
     flex: 0 0 60px;
     align-items: center;
@@ -524,15 +547,18 @@
     overflow: hidden;
     border-radius: 8px;
     isolation: isolate;
-  }
 
-  .custom-category-boxes .category-logo::before {
-    position: absolute;
-    z-index: 0;
-    inset: 0;
-    background-color: rgb(var(--secondary-rgb) / 70%);
-    pointer-events: none;
-    content: "";
+    /*background: rgba(var(--tertiary-rgb), 0.1) !important;*/
+
+    /* Semi-transparent overlay above the category color */
+    &::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      background-color: rgb(var(--secondary-rgb), 0.7);
+      pointer-events: none;
+      content: "";
+    }
   }
 
   .custom-category-boxes .category-logo > .aspect-image {
@@ -545,7 +571,9 @@
     height: 100%;
   }
 
-  .custom-category-boxes .category-logo > .aspect-image > picture {
+  .custom-category-boxes .category-logo
+    > .aspect-image
+    > picture {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -632,7 +660,7 @@
   }
 }
 
-// Category-page background
+// Header styling applied to below-header boxes
 .liberty-category-area {
   position: relative;
   width: 100vw;
@@ -706,7 +734,7 @@
   text-align: left;
 }
 
-// Hide the first custom category heading
+// Hide the header h1 for the first custom category
 .custom-category-header-first {
   display: none;
 }
