@@ -28,7 +28,7 @@
   justify-content: center;
 
   @include viewport.from(sm) {
-    margin-top: var(--space-8);
+    margin: var(--space-8) 0;
   }
 
   &:empty {
