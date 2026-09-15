@@ -158,17 +158,12 @@ export default class LibertyCategoryBoxes extends Component {
   }
 
   <template>
-    {{!-- Homepage: show the forked custom category boxes. --}}
     {{#if this.isHomepage}}
       <CustomCategoryBoxes
         @outletArgs={{this.globalOutletArgs}}
       />
-
-    {{!-- /categories: intentionally render nothing here. --}}
     {{else if this.isCategoriesPage}}
-      {{! Native Discourse categories overview remains in main view. }}
-
-    {{!-- /c/...: show category header and optional subcategories. --}}
+      {{! Leave /categories completely untouched. }}
     {{else if this.isCategoryPage}}
       <div
         class="liberty-category-area"
@@ -176,7 +171,7 @@ export default class LibertyCategoryBoxes extends Component {
       >
         <div class="liberty-category-content">
           <LibertyCategoryHeader />
-
+  
           {{#if this.shouldDisplaySubcategories}}
             <div class="custom-category-boxes-container">
               <CategoryBoxes
