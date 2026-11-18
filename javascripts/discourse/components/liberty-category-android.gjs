@@ -10,7 +10,6 @@ export default class LibertyCategoryAndroidRouter extends Component {
     return [
       "android",
       "android/libertyphone-grapheneos",
-      "android/tipps-und-tricks",
     ];
   }
 
